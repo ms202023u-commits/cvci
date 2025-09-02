@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern News - News Detector Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='civic-lens-design-system.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='unified-header-footer.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+    </div>
+
+    <!-- Unified Header -->
+    {% include 'includes/unified-header.html' %}
+
+    <main class="main">
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <span>📰 Modern News - Live Updates</span>
+                    </div>
+                    <h2 class="hero-title">
+                        <span class="hero-title-main">Latest News and Developments</span>
+                    </h2>
+                    <p class="hero-description">Follow the latest news with AI-powered credibility analysis and live updates</p>
+                    
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <div class="stat-number" id="newsCount">247</div>
+                            <div class="stat-label">Updated News</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="credibilityRate">92.3%</div>
+                            <div class="stat-label">Credibility Rate</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="updateTime">5</div>
+                            <div class="stat-label">Minutes Last Update</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <div class="news-filters">
+                    <button class="filter-btn active" data-category="all">
+                        <i class="fas fa-globe"></i> All News
+                    </button>
+                    <button class="filter-btn" data-category="breaking">
+                        <i class="fas fa-bolt"></i> Breaking
+                    </button>
+                    <button class="filter-btn" data-category="politics">
+                        <i class="fas fa-landmark"></i> Politics
+                    </button>
+                    <button class="filter-btn" data-category="economy">
+                        <i class="fas fa-chart-line"></i> Economy
+                    </button>
+                    <button class="filter-btn" data-category="sports">
+                        <i class="fas fa-futbol"></i> Sports
+                    </button>
+                </div>
+
+                <div class="news-grid" id="newsGrid">
+                    <!-- News items will be dynamically loaded here -->
+                </div>
+
+                <div class="load-more-container">
+                    <button class="load-more-btn" id="loadMoreBtn">
+                        <i class="fas fa-plus"></i>
+                        Load More News
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Unified Footer -->
+    {% include 'includes/unified-footer.html' %}
+
+    <style>
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .news-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .news-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3B82F6, #8B5CF6, #EC4899);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .news-card:hover::before {
+            opacity: 1;
+        }
+
+        .news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .news-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            background: rgba(59, 130, 246, 0.2);
+            color: #3B82F6;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .news-category.breaking {
+            background: rgba(239, 68, 68, 0.2);
+            color: #EF4444;
+        }
+
+        .news-category.politics {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8B5CF6;
+        }
+
+        .news-category.economy {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10B981;
+        }
+
+        .news-category.sports {
+            background: rgba(245, 158, 11, 0.2);
+            color: #F59E0B;
+        }
+
+        .news-time {
+            color: #666;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .news-content {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            text-align: left;
+            color: #fff;
+        }
+
+        .news-hashtags {
+            margin-bottom: 1rem;
+        }
+
+        .hashtag {
+            display: inline-block;
+            color: #3B82F6;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .hashtag:hover {
+            color: #60A5FA;
+        }
+
+        .credibility-section {
+            margin-bottom: 1rem;
+        }
+
+        .credibility-score {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .score-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .score-fill.high {
+            background: linear-gradient(90deg, #10B981, #34D399);
+        }
+
+        .score-fill.medium {
+            background: linear-gradient(90deg, #F59E0B, #FBBF24);
+        }
+
+        .score-fill.low {
+            background: linear-gradient(90deg, #EF4444, #F87171);
+        }
+
+        .score-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .news-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .reactions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .reaction-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .reaction-btn:hover {
+            color: #3B82F6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .news-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .load-more-container {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .load-more-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 auto;
+        }
+
+        .load-more-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .news-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .news-card {
+                padding: 1rem;
+            }
+            
+            .news-filters {
+                gap: 0.5rem;
+            }
+            
+            .filter-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+
+    <script>
+        // Sample news data - similar to your hy.html structure but enhanced
+        const newsData = [
+            {
+                id: 1,
+                content: "الجيش يواصل انزال المساعدات جواً مع دول شقيقة وصديقة على قطاع غزة",
+                hashtags: "#الاردن #عمون #غزة",
+                reactions: 30,
+                timestamp: "3 hours ago",
+                category: "breaking",
+                credibility: 92
+            },
+            {
+                id: 2,
+                content: "وزير الخارجية يبحث مع نظيره المصري آخر التطورات في المنطقة والعلاقات الثنائية",
+                hashtags: "#الاردن #مصر #دبلوماسية",
+                reactions: 25,
+                timestamp: "5 hours ago",
+                category: "politics",
+                credibility: 88
+            },
+            {
+                id: 3,
+                content: "البورصة تسجل ارتفاعاً في مؤشرها العام بنسبة 2.3% في ختام تداولات اليوم",
+                hashtags: "#الاردن #بورصة #اقتصاد",
+                reactions: 18,
+                timestamp: "6 hours ago",
+                category: "economy",
+                credibility: 95
+            },
+            {
+                id: 4,
+                content: "المنتخب الوطني يستعد لمواجهة مهمة في تصفيات كأس العالم أمام المنتخب الاسترالي",
+                hashtags: "#الاردن #كرة_القدم #كأس_العالم",
+                reactions: 42,
+                timestamp: "8 hours ago",
+                category: "sports",
+                credibility: 90
+            },
+            {
+                id: 5,
+                content: "إطلاق مبادرة وطنية جديدة لدعم الشباب في مجال ريادة الأعمال والتكنولوجيا",
+                hashtags: "#الاردن #شباب #ريادة_أعمال",
+                reactions: 35,
+                timestamp: "10 hours ago",
+                category: "economy",
+                credibility: 87
+            },
+            {
+                id: 6,
+                content: "عاجل: اجتماع طارئ لمجلس الوزراء لمناقشة آخر التطورات الإقليمية والدولية",
+                hashtags: "#الاردن #عاجل #حكومة",
+                reactions: 67,
+                timestamp: "2 hours ago",
+                category: "breaking",
+                credibility: 94
+            }
+        ];
+
+        let currentPage = 1;
+        const itemsPerPage = 6;
+
+        function getCategoryIcon(category) {
+            const icons = {
+                breaking: 'fas fa-bolt',
+                politics: 'fas fa-landmark',
+                economy: 'fas fa-chart-line',
+                sports: 'fas fa-futbol',
+                all: 'fas fa-globe'
+            };
+            return icons[category] || 'fas fa-newspaper';
+        }
+
+        function getCredibilityColor(score) {
+            if (score >= 85) return 'high';
+            if (score >= 70) return 'medium';
+            return 'low';
+        }
+
+        function getCredibilityText(score) {
+            if (score >= 85) return 'عالية';
+            if (score >= 70) return 'متوسطة';
+            return 'منخفضة';
+        }
+
+        function createNewsCard(news) {
+            return `
+                <div class="news-card" data-category="${news.category}">
+                    <div class="news-header">
+                        <div class="news-category ${news.category}">
+                            <i class="${getCategoryIcon(news.category)}"></i>
+                            ${news.category === 'breaking' ? 'عاجل' : 
+                              news.category === 'politics' ? 'سياسة' :
+                              news.category === 'economy' ? 'اقتصاد' :
+                              news.category === 'sports' ? 'رياضة' : 'أخبار'}
+                        </div>
+                        <div class="news-time">
+                            <i class="fas fa-clock"></i>
+                            ${news.timestamp}
+                        </div>
+                    </div>
+                    
+                    <div class="news-content">
+                        ${news.content}
+                    </div>
+                    
+                    <div class="news-hashtags">
+                        ${news.hashtags.split(' ').map(tag => `<a href="#" class="hashtag">${tag}</a>`).join('')}
+                    </div>
+                    
+                    <div class="credibility-section">
+                        <div class="credibility-score">
+                            <span class="score-label">مصداقية:</span>
+                            <div class="score-bar">
+                                <div class="score-fill ${getCredibilityColor(news.credibility)}" style="width: ${news.credibility}%"></div>
+                            </div>
+                            <span class="score-text">${news.credibility}% (${getCredibilityText(news.credibility)})</span>
+                        </div>
+                    </div>
+                    
+                    <div class="news-footer">
+                        <div class="reactions">
+                            <button class="reaction-btn">
+                                <i class="fas fa-heart"></i>
+                                ${news.reactions}
+                            </button>
+                            <button class="reaction-btn">
+                                <i class="fas fa-share"></i>
+                            </button>
+                            <button class="reaction-btn">
+                                <i class="fas fa-bookmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadNews(category = 'all') {
+            const newsGrid = document.getElementById('newsGrid');
+            const filteredNews = category === 'all' ? newsData : newsData.filter(news => news.category === category);
+            
+            newsGrid.innerHTML = filteredNews.map(createNewsCard).join('');
+            
+            // Animate cards
+            const cards = newsGrid.querySelectorAll('.news-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNews();
+            
+            // Filter functionality
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    loadNews(btn.dataset.category);
+                });
+            });
+            
+            // Load more functionality
+            document.getElementById('loadMoreBtn').addEventListener('click', () => {
+                // Simulate loading more news
+                const btn = document.getElementById('loadMoreBtn');
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحميل...';
+                
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-plus"></i> تحميل المزيد من الأخبار';
+                }, 1500);
+            });
+            
+            // Update stats animation
+            function animateStats() {
+                const newsCount = document.getElementById('newsCount');
+                const credibilityRate = document.getElementById('credibilityRate');
+                const updateTime = document.getElementById('updateTime');
+                
+                let count = 0;
+                const interval = setInterval(() => {
+                    count += Math.floor(Math.random() * 5) + 1;
+                    if (count >= 247) {
+                        count = 247;
+                        clearInterval(interval);
+                    }
+                    newsCount.textContent = count;
+                }, 50);
+            }
+            
+            animateStats();
+        });
+    </script>
+</body>
+</html>

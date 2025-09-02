@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Civic Lens Solutions - Ultra-Modern News Verification Platform</title>
+    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
+    <link rel="stylesheet" href="{{ url_for('static', filename='civic-lens-design-system.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ultra-index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='unified-header-footer.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <meta name="description" content="Advanced AI-powered news verification platform with real-time analysis, interactive maps, and community reporting.">
+</head>
+<body>
+    <!-- Unified Header -->
+    {% include 'includes/unified-header.html' %}
+
+    <!-- Ultra Hero Section -->
+    <section class="ultra-hero" id="home">
+        <div class="hero-background">
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+            <div class="gradient-orb orb-3"></div>
+            <div class="floating-particles"></div>
+        </div>
+        
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-sparkles"></i>
+                    <span>Powered by Advanced AI Technology</span>
+                </div>
+                
+                <h1 class="hero-title">
+                    <span class="title-line">The Future of</span>
+                    <span class="title-highlight">News Verification</span>
+                    <span class="title-line">is Here</span>
+                </h1>
+                
+                <p class="hero-subtitle">Harness the power of cutting-edge 2025 AI technology to detect misinformation, analyze credibility, and stay informed with real-time insights</p>
+                
+                <p class="hero-description">
+                    Join thousands of users who trust Civic Lens Solutions for accurate, unbiased news verification.
+                </p>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="50000">0</div>
+                        <div class="stat-label">News Analyzed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="98">0</div>
+                        <div class="stat-label">% Accuracy</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="24">0</div>
+                        <div class="stat-label">Hours Coverage</div>
+                    </div>
+                </div>
+                
+                <div class="hero-actions">
+                    <button class="hero-btn primary" onclick="window.location.href='/enhanced-chatbot'">
+                        <i class="fas fa-robot"></i>
+                        <span>Try AI Analysis</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                    
+                    <button class="hero-btn secondary" onclick="window.location.href='/ultra-map'">
+                        <i class="fas fa-map"></i>
+                        <span>Explore Live Map</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="visual-container">
+                    <div class="floating-card card-1">
+                        <div class="card-icon verified">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-title">Verified News</div>
+                            <div class="card-score">95% Credible</div>
+                        </div>
+                        <div class="card-pulse"></div>
+                    </div>
+                    
+                    <div class="floating-card card-2">
+                        <div class="card-icon breaking">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-title">Breaking Alert</div>
+                            <div class="card-score">Live Update</div>
+                        </div>
+                        <div class="card-pulse"></div>
+                    </div>
+                    
+                    <div class="floating-card card-3">
+                        <div class="card-icon ai">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-title">AI Analysis</div>
+                            <div class="card-score">Real-time</div>
+                        </div>
+                        <div class="card-pulse"></div>
+                    </div>
+                    
+                    <div class="central-hub">
+                        <div class="hub-glow"></div>
+                        <div class="hub-content">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="hub-rings">
+                            <div class="ring ring-1"></div>
+                            <div class="ring ring-2"></div>
+                            <div class="ring ring-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Features Showcase Section -->
+    <section class="features-showcase" id="features">
+        <div class="showcase-container">
+            <!-- Section Header -->
+            <div class="showcase-header">
+                <div class="header-badge">
+                    <i class="fas fa-rocket"></i>
+                    <span>Advanced Technology</span>
+                </div>
+                <h2 class="showcase-title">
+                    Advanced AI Technology
+                    <span class="title-accent">Meets User Experience</span>
+                </h2>
+                <div class="title-underline"></div>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="features-grid">
+                <!-- DeepSeek AI Integration -->
+                <div class="feature-card ai-card">
+                    <div class="card-background">
+                        <div class="floating-elements">
+                            <div class="element element-1"></div>
+                            <div class="element element-2"></div>
+                            <div class="element element-3"></div>
+                        </div>
+                    </div>
+                    <div class="card-header">
+                        <div class="feature-icon ai-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>DeepSeek AI Integration</h3>
+                    </div>
+                    <div class="card-content">
+                        <p>Powered by cutting-edge DeepSeek AI models for unparalleled accuracy in news analysis and credibility assessment.</p>
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Real-time analysis</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Multi-language support</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Context understanding</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive News Mapping -->
+                <div class="feature-card map-card">
+                    <div class="card-background">
+                        <div class="map-visualization">
+                            <div class="map-point point-1"></div>
+                            <div class="map-point point-2"></div>
+                            <div class="map-point point-3"></div>
+                            <div class="connection-line line-1"></div>
+                            <div class="connection-line line-2"></div>
+                        </div>
+                    </div>
+                    <div class="card-header">
+                        <div class="feature-icon map-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h3>Interactive News Mapping</h3>
+                    </div>
+                    <div class="card-content">
+                        <p>Professional-grade mapping interface with real-time news tracking, clustering, and advanced filtering capabilities.</p>
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Live news tracking</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Geographic clustering</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Advanced filters</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Community-Driven Verification -->
+                <div class="feature-card community-card">
+                    <div class="card-background">
+                        <div class="community-network">
+                            <div class="user-node node-1"></div>
+                            <div class="user-node node-2"></div>
+                            <div class="user-node node-3"></div>
+                            <div class="user-node node-4"></div>
+                            <div class="network-connection conn-1"></div>
+                            <div class="network-connection conn-2"></div>
+                            <div class="network-connection conn-3"></div>
+                        </div>
+                    </div>
+                    <div class="card-header">
+                        <div class="feature-icon community-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Community-Driven Verification</h3>
+                    </div>
+                    <div class="card-content">
+                        <p>Collaborative platform where citizens contribute to news verification through secure reporting and peer validation.</p>
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Crowd-sourced validation</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Anonymous reporting</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Trust scoring system</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Section -->
+            <div class="statistics-section">
+                <div class="stats-header">
+                    <h3>Platform Impact & Performance</h3>
+                    <p>Real-time metrics showcasing our platform's effectiveness and community engagement</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-newspaper"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number">75,000</div>
+                            <div class="stat-label">News Articles Analyzed</div>
+                            <div class="stat-trend positive">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>+15% this month</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number">98<span class="stat-unit">%</span></div>
+                            <div class="stat-label">Accuracy Rate</div>
+                            <div class="stat-trend">
+                                <i class="fas fa-medal"></i>
+                                <span>Industry leading</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number">25,000</div>
+                            <div class="stat-label">Active Community Members</div>
+                            <div class="stat-trend positive">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Growing daily</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number">24<span class="stat-unit">h</span></div>
+                            <div class="stat-label">Real-time Coverage</div>
+                            <div class="stat-trend">
+                                <i class="fas fa-wifi"></i>
+                                <span>Always online</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action Section -->
+            <div class="cta-section">
+                <div class="cta-background">
+                    <div class="cta-particles">
+                        <div class="particle particle-1"></div>
+                        <div class="particle particle-2"></div>
+                        <div class="particle particle-3"></div>
+                        <div class="particle particle-4"></div>
+                        <div class="particle particle-5"></div>
+                    </div>
+                </div>
+                <div class="cta-content">
+                    <div class="cta-badge">
+                        <i class="fas fa-star"></i>
+                        <span>Ready to Get Started?</span>
+                    </div>
+                    <h3 class="cta-title">
+                        Experience the Future of
+                        <span class="cta-highlight">News Verification</span>
+                    </h3>
+                    <p class="cta-description">
+                        Join thousands of users who trust Civic Lens Solutions for accurate, unbiased news analysis. Start your journey towards informed citizenship today.
+                    </p>
+                    <div class="cta-buttons">
+                        <button class="cta-btn primary" onclick="window.location.href='/enhanced-chatbot'">
+                            <i class="fas fa-robot"></i>
+                            <span>Start AI Analysis</span>
+                        </button>
+                        <button class="cta-btn secondary" onclick="window.location.href='/ultra-map'">
+                            <i class="fas fa-map"></i>
+                            <span>Explore Live Map</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ultra Services Section -->
+    <section class="ultra-services" id="services">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-badge">
+                    <i class="fas fa-cogs"></i>
+                    <span>Our Platform</span>
+                </div>
+                <h2 class="section-title">
+                    Comprehensive News Verification
+                    <span class="title-highlight">Ecosystem</span>
+                </h2>
+                <p class="section-description">
+                    Discover our suite of advanced tools designed to combat misinformation and promote informed citizenship.
+                </p>
+            </div>
+            
+            <div class="services-grid">
+                <!-- Enhanced AI Chatbots -->
+                <div class="service-card premium" onclick="window.location.href='/enhanced-chatbot'">
+                    <div class="card-header">
+                        <div class="service-icon ai-gradient">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="service-badge new">New</div>
+                    </div>
+                    <div class="card-content">
+                        <h3>Enhanced AI Chatbots</h3>
+                        <p>Dual AI assistants for comprehensive analysis and quick verification with DeepSeek integration.</p>
+                        <div class="service-features">
+                            <span class="feature-tag">Comprehensive Analysis</span>
+                            <span class="feature-tag">Quick Check Mode</span>
+                            <span class="feature-tag">Real-time Scoring</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="service-btn">
+                            <span>Try AI Analysis</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="card-glow"></div>
+                </div>
+                
+                <!-- Ultra News Map -->
+                <div class="service-card premium" onclick="window.location.href='/ultra-map'">
+                    <div class="card-header">
+                        <div class="service-icon map-gradient">
+                            <i class="fas fa-map"></i>
+                        </div>
+                        <div class="service-badge featured">Featured</div>
+                    </div>
+                    <div class="card-content">
+                        <h3>Ultra News Map</h3>
+                        <p>Explore next-generation interactive maps powered by real-time 2025 data feeds and advanced geolocation services for comprehensive news tracking and local insights.</p>
+                        <div class="service-features">
+                            <span class="feature-tag">Live Tracking</span>
+                            <span class="feature-tag">Advanced Filters</span>
+                            <span class="feature-tag">Waze-style UI</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="service-btn">
+                            <span>Explore Map</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="card-glow"></div>
+                </div>
+                
+                <!-- Community Reporting -->
+                <div class="service-card" onclick="window.location.href='/report'">
+                    <div class="card-header">
+                        <div class="service-icon report-gradient">
+                            <i class="fas fa-flag"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3>Community Reporting</h3>
+                        <p>Secure platform for citizens to report news, misinformation, and critical events in their communities.</p>
+                        <div class="service-features">
+                            <span class="feature-tag">Anonymous Options</span>
+                            <span class="feature-tag">Quick Submission</span>
+                            <span class="feature-tag">Community Verified</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="service-btn">
+                            <span>Submit Report</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="card-glow"></div>
+                </div>
+                
+                <!-- Legacy Chatbot -->
+                <div class="service-card" onclick="window.location.href='/chatbot'">
+                    <div class="card-header">
+                        <div class="service-icon legacy-gradient">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3>Classic AI Assistant</h3>
+                        <p>Original AI chatbot for basic news analysis and credibility verification with proven reliability.</p>
+                        <div class="service-features">
+                            <span class="feature-tag">Proven Reliable</span>
+                            <span class="feature-tag">Simple Interface</span>
+                            <span class="feature-tag">Quick Analysis</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="service-btn">
+                            <span>Try Classic</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="card-glow"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Reports Section -->
+    <section class="recent-reports" id="recent-reports">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-badge">
+                    <i class="fas fa-newspaper"></i>
+                    <span>Community Reports</span>
+                </div>
+                <h2 class="section-title">
+                    Latest Community
+                    <span class="title-highlight">Reports</span>
+                </h2>
+                <p class="section-description">
+                    Real-time reports from our community members helping to verify news and combat misinformation.
+                </p>
+            </div>
+            
+            <div class="reports-container">
+                <div class="reports-grid" id="reportsGrid">
+                    <!-- Reports will be loaded dynamically -->
+                    <div class="report-card loading-placeholder">
+                        <div class="card-shimmer"></div>
+                        <div class="report-content">
+                            <div class="shimmer-line title"></div>
+                            <div class="shimmer-line subtitle"></div>
+                            <div class="shimmer-line content"></div>
+                        </div>
+                    </div>
+                    <div class="report-card loading-placeholder">
+                        <div class="card-shimmer"></div>
+                        <div class="report-content">
+                            <div class="shimmer-line title"></div>
+                            <div class="shimmer-line subtitle"></div>
+                            <div class="shimmer-line content"></div>
+                        </div>
+                    </div>
+                    <div class="report-card loading-placeholder">
+                        <div class="card-shimmer"></div>
+                        <div class="report-content">
+                            <div class="shimmer-line title"></div>
+                            <div class="shimmer-line subtitle"></div>
+                            <div class="shimmer-line content"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reports-actions">
+                    <button class="reports-btn refresh-btn" id="refreshReports">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>Refresh Reports</span>
+                    </button>
+                    <button class="reports-btn view-all-btn" onclick="window.location.href='/report'">
+                        <span>View All Reports</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ultra Features Section -->
+    <section class="ultra-features" id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-badge">
+                    <i class="fas fa-star"></i>
+                    <span>Platform Features</span>
+                </div>
+                <h2 class="section-title">
+                    Advanced AI Technology
+                    <span class="title-highlight">Meets User Experience</span>
+                </h2>
+            </div>
+            
+            <div class="features-showcase">
+                <div class="feature-item">
+                    <div class="feature-visual">
+                        <div class="visual-icon ai-brain">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="visual-effects">
+                            <div class="effect-ring"></div>
+                            <div class="effect-pulse"></div>
+                        </div>
+                    </div>
+                    <div class="feature-content">
+                        <h3>DeepSeek AI Integration</h3>
+                        <p>Powered by cutting-edge DeepSeek AI models for unparalleled accuracy in news analysis and credibility assessment.</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Real-time analysis</li>
+                            <li><i class="fas fa-check"></i> Multi-language support</li>
+                            <li><i class="fas fa-check"></i> Context understanding</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="feature-item reverse">
+                    <div class="feature-visual">
+                        <div class="visual-icon map-interactive">
+                            <i class="fas fa-globe-americas"></i>
+                        </div>
+                        <div class="visual-effects">
+                            <div class="effect-ring"></div>
+                            <div class="effect-pulse"></div>
+                        </div>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Interactive News Mapping</h3>
+                        <p>Professional-grade mapping interface with real-time news tracking, clustering, and advanced filtering capabilities.</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Live news tracking</li>
+                            <li><i class="fas fa-check"></i> Geographic clustering</li>
+                            <li><i class="fas fa-check"></i> Advanced filters</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-visual">
+                        <div class="visual-icon community-network">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="visual-effects">
+                            <div class="effect-ring"></div>
+                            <div class="effect-pulse"></div>
+                        </div>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Community-Driven Verification</h3>
+                        <p>Collaborative platform where citizens contribute to news verification through secure reporting and peer validation.</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Crowd-sourced validation</li>
+                            <li><i class="fas fa-check"></i> Anonymous reporting</li>
+                            <li><i class="fas fa-check"></i> Trust scoring system</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ultra Stats Section -->
+    <section class="ultra-stats">
+        <div class="stats-background">
+            <div class="stats-pattern"></div>
+        </div>
+        <div class="section-container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <div class="stat-number" data-target="75000">0</div>
+                    <div class="stat-label">News Articles Analyzed</div>
+                    <div class="stat-trend">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+15% this month</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="stat-number" data-target="98">0</div>
+                    <div class="stat-label">Accuracy Rate (%)</div>
+                    <div class="stat-trend">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>Industry leading</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number" data-target="25000">0</div>
+                    <div class="stat-label">Active Community Members</div>
+                    <div class="stat-trend">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>Growing daily</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-number" data-target="24">0</div>
+                    <div class="stat-label">Hours Real-time Coverage</div>
+                    <div class="stat-trend">
+                        <i class="fas fa-check"></i>
+                        <span>Always online</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ultra CTA Section -->
+    <section class="ultra-cta">
+        <div class="cta-background">
+            <div class="cta-gradient"></div>
+            <div class="cta-particles"></div>
+        </div>
+        <div class="section-container">
+            <div class="cta-content">
+                <div class="cta-badge">
+                    <i class="fas fa-rocket"></i>
+                    <span>Ready to Get Started?</span>
+                </div>
+                <h2 class="cta-title">
+                    Experience the Future of
+                    <span class="title-highlight">News Verification</span>
+                </h2>
+                <p class="cta-description">
+                    Join thousands of users who trust Civic Lens Solutions for accurate, unbiased news analysis. 
+                    Start your journey towards informed citizenship today.
+                </p>
+                <div class="cta-actions">
+                    <button class="cta-btn primary" onclick="window.location.href='/enhanced-chatbot'">
+                        <i class="fas fa-robot"></i>
+                        <span>Start AI Analysis</span>
+                        <div class="btn-shine"></div>
+                    </button>
+                    <button class="cta-btn secondary" onclick="window.location.href='/ultra-map'">
+                        <i class="fas fa-map"></i>
+                        <span>Explore Live Map</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ultra Footer -->
+    <!-- Unified Footer -->
+    {% include 'includes/unified-footer.html' %}
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <i class="fas fa-eye"></i>
+            </div>
+            <div class="loading-text">Civic Lens Solutions</div>
+            <div class="loading-progress">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/ultra-index.js"></script>
+</body>
+</html>

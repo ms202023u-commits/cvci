@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latest News - Civic Lens Solutions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='civic-lens-design-system.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='unified-header-footer.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+    </div>
+
+    <!-- Unified Header -->
+    {% include 'includes/unified-header.html' %}
+
+    <main class="main">
+        <!-- Professional Header Section -->
+        <section class="professional-header">
+            <div class="container">
+                <div class="header-content">
+                    <h1>Civic Lens - Real-Time Professional News Feed</h1>
+                    <div class="controls">
+                        <input type="text" id="searchInput" placeholder="Search news..." aria-label="Search news">
+                        <select id="sortSelect" aria-label="Sort news">
+                            <option value="default">Sort by Default</option>
+                            <option value="credibility">Sort by Credibility</option>
+                            <option value="reactions">Sort by Engagement</option>
+                        </select>
+                        <select id="filterSelect" aria-label="Filter news">
+                            <option value="all">All News</option>
+                            <option value="highCredibility">High Credibility (80%+)</option>
+                            <option value="social">Social Media</option>
+                            <option value="verified">Verified Sources</option>
+                        </select>
+                        <button id="refreshButton" aria-label="Refresh news">Refresh</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- News Content Section -->
+        <section class="content-section">
+            <div class="container">
+                <!-- Loading indicator -->
+                <div id="loading" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Loading news...</p>
+                </div>
+                
+                <!-- News Grid -->
+                <div id="newsGrid" class="news-grid"></div>
+
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Unified Footer -->
+    {% include 'includes/unified-footer.html' %}
+
+    <style>
+        /* Professional Layout inspired by vb.html */
+        body { 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.6; 
+            color: #333; 
+            min-height: 100vh;
+        }
+        
+        .container { 
+            max-width: 80rem; 
+            margin: 0 auto; 
+            padding: 1rem; 
+        }
+        
+        /* Professional Header with Gradient */
+        .professional-header { 
+            background: linear-gradient(to bottom, #182d43, #0f1e2d); 
+            color: white; 
+            padding: 1.5rem; 
+            border-radius: 0.5rem; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+            margin-bottom: 1.5rem; 
+        }
+        
+        .header-content { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            flex-wrap: wrap; 
+        }
+        
+        .professional-header h1 { 
+            font-size: 1.875rem; 
+            font-weight: 700; 
+            margin: 0; 
+            letter-spacing: 0.05rem; 
+        }
+        
+        .controls { 
+            display: flex; 
+            gap: 1rem; 
+            margin-top: 1rem; 
+            flex-wrap: wrap; 
+        }
+        
+        @media (min-width: 640px) { 
+            .controls { margin-top: 0; } 
+        }
+        
+        select, button, input[type="text"] { 
+            background-color: white; 
+            color: #182d43; 
+            padding: 0.5rem 1rem; 
+            border-radius: 0.25rem; 
+            border: none; 
+            cursor: pointer; 
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s; 
+            font-weight: 500; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
+        }
+        
+        select:hover, button:hover, input[type="text"]:hover { 
+            background-color: #e5e7eb; 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        }
+        
+        input[type="text"] { 
+            cursor: text; 
+            width: 200px; 
+        }
+        
+        input[type="text"]::placeholder { 
+            color: #6b7280; 
+        }
+        
+        /* Grid and Card Styles with 3D Animation Effects */
+        .news-grid { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 1.5rem; 
+            perspective: 1000px; 
+        }
+        
+        @media (min-width: 640px) { 
+            .news-grid { grid-template-columns: repeat(2, 1fr); } 
+        }
+        
+        @media (min-width: 1024px) { 
+            .news-grid { grid-template-columns: repeat(3, 1fr); } 
+        }
+        
+        .news-card { 
+            background-color: white; 
+            border-radius: 0.5rem; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+            padding: 1.5rem; 
+            margin-bottom: 1rem; 
+            transform: translateY(20px) rotateX(10deg); 
+            opacity: 0; 
+            transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease; 
+            animation: slideIn 0.5s ease-out forwards; 
+            position: relative; 
+            overflow: hidden; 
+            border: 1px solid #e5e7eb; 
+            backface-visibility: hidden; 
+        }
+        
+        .news-card:hover { 
+            transform: rotateX(0deg) rotateY(5deg) scale(1.05); 
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15); 
+        }
+        
+        .news-card.active { 
+            border: 2px solid #182d43; 
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15); 
+            transform: rotateX(0deg) scale(1.05); 
+        }
+        
+        .news-card::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 4px; 
+            background-color: #182d43; 
+            transform: scaleX(0); 
+            transition: transform 0.3s ease; 
+        }
+        
+        .news-card:hover::before { 
+            transform: scaleX(1); 
+        }
+        
+        @keyframes slideIn { 
+            0% { transform: translateY(20px) rotateX(10deg); opacity: 0; } 
+            100% { transform: translateY(0) rotateX(0deg); opacity: 1; } 
+        }
+        
+        .news-card h2 { 
+            font-size: 1.25rem; 
+            font-weight: 600; 
+            color: #1f2937; 
+            margin: 0 0 0.5rem; 
+            letter-spacing: 0.025rem; 
+        }
+        
+        .news-card .hashtags { 
+            color: #4b5563; 
+            margin: 0.5rem 0; 
+            font-size: 0.875rem; 
+            font-style: italic; 
+        }
+        
+        .news-card .source { 
+            font-size: 0.875rem; 
+            color: #182d43; 
+            font-weight: 500; 
+            margin-bottom: 0.5rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05rem; 
+        }
+        
+        .info { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-top: 1rem; 
+            font-size: 0.875rem; 
+            color: #6b7280; 
+            border-top: 1px solid #e5e7eb; 
+            padding-top: 0.5rem; 
+        }
+        
+        .civic-lens-check { 
+            margin-top: 0.5rem; 
+            font-size: 0.875rem; 
+            font-weight: 500; 
+            padding: 0.25rem 0.5rem; 
+            border-radius: 0.25rem; 
+            display: inline-block; 
+        }
+        
+        .civic-lens-check-low { 
+            background-color: #fee2e2; 
+            color: #b91c1c; 
+        }
+        
+        .civic-lens-check-medium { 
+            background-color: #fef9c3; 
+            color: #854d0e; 
+        }
+        
+        .civic-lens-check-high { 
+            background-color: #dcfce7; 
+            color: #15803d; 
+        }
+        
+        .credibility { 
+            margin-top: 0.5rem; 
+            border-top: 1px solid #e5e7eb; 
+            padding-top: 0.5rem; 
+        }
+        
+        .credibility span { 
+            font-size: 0.875rem; 
+            font-weight: 500; 
+            display: block; 
+        }
+        
+        .progress { 
+            width: 100%; 
+            background-color: #e5e7eb; 
+            border-radius: 9999px; 
+            height: 0.625rem; 
+            margin-top: 0.25rem; 
+            overflow: hidden; 
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05); 
+        }
+        
+        .progress-bar { 
+            height: 100%; 
+            border-radius: 9999px; 
+            transition: width 0.5s ease; 
+        }
+        
+        .progress-bar-low { background-color: #dc2626; }
+        .progress-bar-medium { background-color: #eab308; }
+        .progress-bar-high { background-color: #16a34a; }
+        
+        /* Buttons Styles */
+        .buttons { 
+            display: flex; 
+            gap: 0.5rem; 
+            margin-top: 1rem; 
+            flex-wrap: wrap; 
+        }
+        
+        .buttons button { 
+            background-color: #182d43; 
+            color: white; 
+            padding: 0.5rem 1rem; 
+            border-radius: 0.25rem; 
+            border: none; 
+            cursor: pointer; 
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s; 
+            font-weight: 500; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
+            letter-spacing: 0.025rem; 
+        }
+        
+        .buttons button:hover { 
+            background-color: #0f1e2d; 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        }
+        
+        .buttons button.secondary { 
+            background-color: #d1d5db; 
+            color: #182d43; 
+        }
+        
+        .buttons button.secondary:hover { 
+            background-color: #b3b7bd; 
+        }
+        
+        /* Loading and No Results */
+        .loading { 
+            text-align: center; 
+            padding: 2rem; 
+        }
+        
+        .spinner { 
+            border: 4px solid #f3f3f3; 
+            border-top: 4px solid #182d43; 
+            border-radius: 50%; 
+            width: 40px; 
+            height: 40px; 
+            animation: spin 1s linear infinite; 
+            margin: 0 auto 0.5rem; 
+        }
+        
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        
+        .no-results { 
+            text-align: center; 
+            color: #6b7280; 
+            grid-column: span 3 / span 3; 
+            font-size: 1rem; 
+            padding: 1rem; 
+            background-color: #fff; 
+            border-radius: 0.5rem; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 400px) { 
+            .news-card { padding: 1rem; } 
+            .news-card h2 { font-size: 1rem; } 
+            .buttons { flex-direction: column; gap: 0.25rem; } 
+        }
+    </style>
+
+    <script>
+        // Professional News Feed JavaScript with real data from vb.html and translated Arabic content
+        const newsData = [
+            // Data from vb.html - QatarNews (English)
+            { id: 1, type: 'news', title: 'Qatar hosts international conference on climate change adaptation', description: 'Qatar organizes a major international conference focused on climate change adaptation strategies and environmental sustainability.', source: 'QatarNews', publishedAt: '1 hour ago', credibilityScore: 85, credibilityLevel: 'High', url: 'https://www.facebook.com/QatarNews', reactions: 150 },
+            { id: 2, type: 'news', title: 'Doha Metro expansion project reaches new milestone', description: 'The Doha Metro expansion project achieves a significant milestone in infrastructure development.', source: 'QatarNews', publishedAt: '2 hours ago', credibilityScore: 82, credibilityLevel: 'High', url: 'https://www.facebook.com/QatarNews', reactions: 120 },
+            { id: 3, type: 'news', title: 'Qatar National Team qualifies for Asian Cup finals', description: 'Qatar National Football Team secures qualification for the Asian Cup finals in a remarkable sporting achievement.', source: 'QatarNews', publishedAt: '3 hours ago', credibilityScore: 88, credibilityLevel: 'High', url: 'https://www.facebook.com/QatarNews', reactions: 200 },
+            { id: 4, type: 'news', title: 'New economic reforms announced by Qatar government', description: 'Qatar government announces comprehensive economic reforms to boost growth and diversification.', source: 'QatarNews', publishedAt: '4 hours ago', credibilityScore: 79, credibilityLevel: 'Medium', url: 'https://www.facebook.com/QatarNews', reactions: 100 },
+            { id: 5, type: 'news', title: 'Cultural festival in Doha attracts thousands', description: 'A major cultural festival in Doha draws thousands of visitors celebrating arts and heritage.', source: 'QatarNews', publishedAt: '5 hours ago', credibilityScore: 84, credibilityLevel: 'High', url: 'https://www.facebook.com/QatarNews', reactions: 180 },
+            
+            // Data from vb.html - Al Arabiya English
+            { id: 6, type: 'news', title: 'US elections 2024: Key candidates and their stances on Middle East policy', description: 'Analysis of key US election candidates and their foreign policy positions regarding the Middle East region.', source: 'Al Arabiya English', publishedAt: '1 hour ago', credibilityScore: 91, credibilityLevel: 'High', url: 'https://www.facebook.com/alarabiya.english', reactions: 250 },
+            { id: 7, type: 'news', title: 'Lebanon crisis: Latest developments in the ongoing conflict', description: 'Latest updates on the ongoing crisis in Lebanon and international efforts for resolution.', source: 'Al Arabiya English', publishedAt: '2 hours ago', credibilityScore: 87, credibilityLevel: 'High', url: 'https://www.facebook.com/alarabiya.english', reactions: 300 },
+            { id: 8, type: 'news', title: 'Saudi Arabia\'s Vision 2030: Progress and future plans', description: 'Comprehensive review of Saudi Arabia\'s Vision 2030 progress and upcoming development initiatives.', source: 'Al Arabiya English', publishedAt: '3 hours ago', credibilityScore: 89, credibilityLevel: 'High', url: 'https://www.facebook.com/alarabiya.english', reactions: 180 },
+            { id: 9, type: 'news', title: 'Gaza updates: Humanitarian aid efforts amid ceasefire talks', description: 'Latest developments in Gaza including humanitarian aid distribution and ongoing ceasefire negotiations.', source: 'Al Arabiya English', publishedAt: '4 hours ago', credibilityScore: 86, credibilityLevel: 'High', url: 'https://www.facebook.com/alarabiya.english', reactions: 220 },
+            { id: 10, type: 'news', title: 'UAE space program achieves new milestone', description: 'United Arab Emirates space program reaches a significant milestone in space exploration and technology.', source: 'Al Arabiya English', publishedAt: '7 hours ago', credibilityScore: 83, credibilityLevel: 'High', url: 'https://www.facebook.com/alarabiya.english', reactions: 210 },
+            
+            // Translated Arabic content from vb.html - Ammon News
+            { id: 11, type: 'news', title: 'Army continues air drops of aid with brotherly and friendly countries to Gaza Strip', description: 'The army continues coordinated air drops of humanitarian aid to Gaza Strip in cooperation with brotherly and friendly nations.', source: 'Ammon News', publishedAt: '3 hours ago', credibilityScore: 78, credibilityLevel: 'Medium', url: 'https://www.facebook.com/ammonnews', reactions: 30 },
+            { id: 12, type: 'news', title: 'Bani Mustafa discusses cooperation aspects with UNICEF representative', description: 'Minister Bani Mustafa holds discussions with UNICEF representative on various aspects of mutual cooperation and development programs.', source: 'Ammon News', publishedAt: '3 hours ago', credibilityScore: 75, credibilityLevel: 'Medium', url: 'https://www.facebook.com/ammonnews', reactions: 12 },
+            
+            // Translated Arabic social media content from existing data
+            { id: 13, type: 'social', title: 'Breaking: New developments in regional political situation', description: 'Breaking: New developments in the regional political situation require careful monitoring from international observers.', source: 'Al Nahar Al Arabi', publishedAt: '45 minutes ago', credibilityScore: 82, credibilityLevel: 'High', platform: 'Twitter', reactions: 245 },
+            { id: 14, type: 'social', title: 'Al Nahar Al Arabi: Important press conference announcement', description: 'Al Nahar Al Arabi | Important press conference to announce new initiatives in education and health sectors.', source: 'Al Nahar Al Arabi', publishedAt: '1 hour ago', credibilityScore: 79, credibilityLevel: 'Medium', platform: 'Twitter', reactions: 189 },
+            { id: 15, type: 'social', title: 'Exclusive: Diplomatic sources reveal secret talks', description: 'Exclusive: Diplomatic sources reveal secret talks between Arab leaders to resolve regional crises.', source: 'Al Nahar Al Arabi', publishedAt: '2 hours ago', credibilityScore: 85, credibilityLevel: 'High', platform: 'Twitter', reactions: 312 },
+            { id: 16, type: 'social', title: 'Latest News: Emergency meeting of Arab Foreign Ministers', description: 'Latest News: Emergency meeting of Arab Foreign Ministers to discuss recent developments in the region.', source: 'Al Nahar Al Arabi', publishedAt: '3 hours ago', credibilityScore: 88, credibilityLevel: 'High', platform: 'Twitter', reactions: 267 },
+            { id: 17, type: 'social', title: 'Special Report: Experts warn of economic crisis implications', description: 'Special Report: Experts warn of the implications of the economic crisis on social conditions.', source: 'Al Nahar Al Arabi', publishedAt: '4 hours ago', credibilityScore: 76, credibilityLevel: 'Medium', platform: 'Twitter', reactions: 156 },
+            { id: 18, type: 'social', title: 'Al Nahar Al Arabi: Extraordinary Arab summit', description: 'Al Nahar Al Arabi | Extraordinary Arab summit to discuss sensitive files concerning Arab national security.', source: 'Al Nahar Al Arabi', publishedAt: '5 hours ago', credibilityScore: 84, credibilityLevel: 'High', platform: 'Twitter', reactions: 298 },
+            { id: 19, type: 'social', title: 'Breaking: International negotiations results announced', description: 'Breaking: Announcement of international negotiations results regarding security and stability in the Middle East.', source: 'Al Nahar Al Arabi', publishedAt: '6 hours ago', credibilityScore: 87, credibilityLevel: 'High', platform: 'Twitter', reactions: 234 },
+            { id: 20, type: 'social', title: 'Exclusive: Secret documents reveal new cooperation plans', description: 'Exclusive: Secret documents reveal new plans for economic cooperation between Arab countries.', source: 'Al Nahar Al Arabi', publishedAt: '7 hours ago', credibilityScore: 81, credibilityLevel: 'High', platform: 'Twitter', reactions: 178 },
+            
+            // Additional translated social media content from Facebook sources
+            { id: 21, type: 'social', title: 'Mosaique FM: Cultural event highlights regional cooperation', description: 'Major cultural event highlighting regional cooperation and cultural exchange initiatives across the Arab world.', source: 'Mosaique FM', publishedAt: '2 hours ago', credibilityScore: 73, credibilityLevel: 'Medium', platform: 'Facebook', reactions: 145 },
+            { id: 22, type: 'social', title: 'Mosaique FM: Economic summit discusses future partnerships', description: 'Economic summit brings together regional leaders to discuss future partnerships and investment opportunities.', source: 'Mosaique FM', publishedAt: '4 hours ago', credibilityScore: 77, credibilityLevel: 'Medium', platform: 'Facebook', reactions: 167 },
+            { id: 23, type: 'social', title: 'Mosaique FM: Technology conference showcases innovation', description: 'Regional technology conference showcases latest innovations and digital transformation initiatives.', source: 'Mosaique FM', publishedAt: '6 hours ago', credibilityScore: 80, credibilityLevel: 'High', platform: 'Facebook', reactions: 203 },
+            
+            // Additional news from vb.html dataset
+            { id: 24, type: 'news', title: 'Qatar Airways expands fleet with new aircraft', description: 'Qatar Airways announces major fleet expansion with acquisition of new generation aircraft to enhance global connectivity.', source: 'QatarNews', publishedAt: '6 hours ago', credibilityScore: 86, credibilityLevel: 'High', url: 'https://www.facebook.com/QatarNews', reactions: 140 },
+            { id: 25, type: 'news', title: 'Education sector in Qatar sees digital transformation', description: 'Qatar\'s education sector undergoes comprehensive digital transformation with new technology initiatives.', source: 'QatarNews', publishedAt: '7 hours ago', credibilityScore: 81, credibilityLevel: 'High', url: 'https://www.facebook.com/QatarNews', reactions: 110 },
+            { id: 26, type: 'news', title: 'Iran nuclear deal: Negotiations resume in Vienna', description: 'International negotiations on Iran nuclear deal resume in Vienna with renewed diplomatic efforts.', source: 'Al Arabiya English', publishedAt: '5 hours ago', credibilityScore: 89, credibilityLevel: 'High', url: 'https://www.facebook.com/alarabiya.english', reactions: 190 },
+            { id: 27, type: 'news', title: 'Egypt\'s economic reforms yield positive results', description: 'Egypt\'s comprehensive economic reform program shows positive results in growth and stability indicators.', source: 'Al Arabiya English', publishedAt: '6 hours ago', credibilityScore: 83, credibilityLevel: 'High', url: 'https://www.facebook.com/alarabiya.english', reactions: 160 }
+        ];
+
+        let filteredData = [...newsData];
+        let currentFilter = 'all';
+        let currentSort = 'default';
+        let searchQuery = '';
+
+        // DOM Elements
+        const newsGrid = document.getElementById('newsGrid');
+        const searchInput = document.getElementById('searchInput');
+        const sortSelect = document.getElementById('sortSelect');
+        const filterSelect = document.getElementById('filterSelect');
+        const refreshButton = document.getElementById('refreshButton');
+        const loading = document.getElementById('loading');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderNews();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            searchInput.addEventListener('input', handleSearch);
+            sortSelect.addEventListener('change', handleSort);
+            filterSelect.addEventListener('change', handleFilter);
+            refreshButton.addEventListener('click', handleRefresh);
+        }
+
+        function handleSearch(e) {
+            searchQuery = e.target.value.toLowerCase();
+            applyFilters();
+        }
+
+        function handleSort(e) {
+            currentSort = e.target.value;
+            applyFilters();
+        }
+
+        function handleFilter(e) {
+            currentFilter = e.target.value;
+            applyFilters();
+        }
+
+        function handleRefresh() {
+            showLoading();
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        }
+
+        function applyFilters() {
+            let filtered = [...newsData];
+
+            // Apply search filter
+            if (searchQuery) {
+                filtered = filtered.filter(item => 
+                    item.title.toLowerCase().includes(searchQuery) ||
+                    item.description.toLowerCase().includes(searchQuery) ||
+                    item.source.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            // Apply category filter
+            switch (currentFilter) {
+                case 'highCredibility':
+                    filtered = filtered.filter(item => item.credibilityScore >= 80);
+                    break;
+                case 'social':
+                    filtered = filtered.filter(item => item.type === 'social');
+                    break;
+                case 'verified':
+                    filtered = filtered.filter(item => item.credibilityScore >= 70);
+                    break;
+            }
+
+            // Apply sorting
+            switch (currentSort) {
+                case 'credibility':
+                    filtered.sort((a, b) => b.credibilityScore - a.credibilityScore);
+                    break;
+                case 'reactions':
+                    filtered.sort((a, b) => b.reactions - a.reactions);
+                    break;
+            }
+
+            filteredData = filtered;
+            renderNews();
+        }
+
+        function renderNews() {
+            if (filteredData.length === 0) {
+                newsGrid.innerHTML = '<div class="no-results">No news articles match your criteria.</div>';
+                return;
+            }
+
+            newsGrid.innerHTML = filteredData.map(item => createNewsCard(item)).join('');
+            animateCards();
+        }
+
+        function createNewsCard(item) {
+            const credibilityClass = item.credibilityScore >= 80 ? 'high' : 
+                                   item.credibilityScore >= 60 ? 'medium' : 'low';
+            
+            const civicLensClass = `civic-lens-check-${credibilityClass}`;
+            
+            return `
+                <div class="news-card" data-id="${item.id}">
+                    <div class="source">${item.source}</div>
+                    <h2>${item.title}</h2>
+                    <p>${item.description}</p>
+                    <div class="hashtags">${item.type === 'social' ? '#SocialMedia' : '#News'} #CivicLens</div>
+                    <div class="info">
+                        <span>${item.publishedAt}</span>
+                        <span>${item.reactions} reactions</span>
+                    </div>
+                    <div class="civic-lens-check ${civicLensClass}">
+                        Civic Lens Check: ${item.credibilityLevel || 'Verified'}
+                    </div>
+                    <div class="credibility">
+                        <span>Credibility Score</span>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-${credibilityClass}" 
+                                 style="width: ${item.credibilityScore}%"></div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        ${item.url ? `<button onclick="window.open('${item.url}', '_blank')">Read Full Article</button>` : ''}
+                        <button class="secondary" onclick="shareNews(${item.id})">Share</button>
+                        <button class="secondary" onclick="saveNews(${item.id})">Save</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function animateCards() {
+            const cards = document.querySelectorAll('.news-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        }
+
+        function showLoading() {
+            loading.style.display = 'block';
+            newsGrid.style.display = 'none';
+        }
+
+        function hideLoading() {
+            loading.style.display = 'none';
+            newsGrid.style.display = 'grid';
+        }
+
+        function shareNews(id) {
+            const item = newsData.find(news => news.id === id);
+            if (navigator.share && item) {
+                navigator.share({
+                    title: item.title,
+                    text: item.description,
+                    url: item.url || window.location.href
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const url = item?.url || window.location.href;
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Link copied to clipboard!');
+                });
+            }
+        }
+
+        function saveNews(id) {
+            const item = newsData.find(news => news.id === id);
+            if (item) {
+                // Simulate saving to local storage or backend
+                let savedNews = JSON.parse(localStorage.getItem('savedNews') || '[]');
+                if (!savedNews.find(saved => saved.id === id)) {
+                    savedNews.push(item);
+                    localStorage.setItem('savedNews', JSON.stringify(savedNews));
+                    alert('News article saved!');
+                } else {
+                    alert('Article already saved!');
+                }
+            }
+        }
+
+        // Add click handlers for card interactions
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.news-card')) {
+                const card = e.target.closest('.news-card');
+                // Remove active class from all cards
+                document.querySelectorAll('.news-card').forEach(c => c.classList.remove('active'));
+                // Add active class to clicked card
+                card.classList.add('active');
+            }
+        });
+    </script>
+
+
+</body>
+</html>

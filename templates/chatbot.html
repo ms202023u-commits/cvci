@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Analyst - Civic Lens Solutions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='civic-lens-design-system.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ultra-index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='chatbot-unified.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='unified-header-footer.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Unified Header -->
+    {% include 'includes/unified-header.html' %}
+
+    <!-- Modern Chatbot Interface -->
+    <div class="modern-chatbot-page">
+        <!-- Hero Section -->
+        <div class="chatbot-hero">
+            <div class="hero-content">
+                <div class="ai-avatar">
+                    <div class="avatar-ring"></div>
+                    <div class="avatar-core">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="pulse-animation"></div>
+                </div>
+                <h1 class="hero-title">Classic AI Assistant</h1>
+                <p class="hero-description">Reliable news analysis powered by DeepSeek AI technology</p>
+                <div class="status-badge">
+                    <div class="status-dot"></div>
+                    <span>Online & Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Interface -->
+        <div class="chat-interface">
+            <div class="chat-container">
+                <!-- Messages Area -->
+                <div class="messages-area" id="messagesArea">
+                    <div class="welcome-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-bubble ai-message">
+                            <div class="message-header">
+                                <span class="sender-name">AI Assistant</span>
+                                <span class="message-time">Now</span>
+                            </div>
+                            <div class="message-content">
+                                <h4>Welcome to Civic Lens AI Analysis! 🤖</h4>
+                                <p>I'm here to help you verify news credibility and detect misinformation. Simply paste your news content below and I'll provide:</p>
+                                <ul>
+                                    <li><strong>Credibility Score</strong> (0-100)</li>
+                                    <li><strong>Source Analysis</strong></li>
+                                    <li><strong>Bias Detection</strong></li>
+                                    <li><strong>Fact Verification</strong></li>
+                                </ul>
+                                <p>Let's start analyzing!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="input-area">
+                    <div class="input-container">
+                        <div class="input-wrapper">
+                            <textarea id="userMessage" placeholder="Paste your news content here for analysis..." class="message-input"></textarea>
+                            <button id="sendButton" class="send-button">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div class="input-footer">
+                            <div class="char-counter">
+                                <span id="charCount">0</span>/5000 characters
+                            </div>
+                            <div class="quick-actions">
+                                <button class="quick-btn" onclick="clearChat()">
+                                    <i class="fas fa-trash"></i> Clear
+                                </button>
+                                <button class="quick-btn" onclick="exportChat()">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unified Footer -->
+    {% include 'includes/unified-footer.html' %}
+
+    <!-- JavaScript -->
+    <script>
+        // Character counter
+        const messageInput = document.getElementById('userMessage');
+        const charCount = document.getElementById('charCount');
+        
+        if (messageInput && charCount) {
+            messageInput.addEventListener('input', function() {
+                charCount.textContent = this.value.length;
+            });
+        }
+        
+        // Send message function
+        document.getElementById('sendButton').addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            // Add user message to chat
+            addMessage(message, 'user');
+            messageInput.value = '';
+            charCount.textContent = '0';
+            
+            // Show typing indicator
+            showTyping();
+            
+            try {
+                const response = await fetch('/chatbot_response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                const data = await response.json();
+                hideTyping();
+                
+                // Add AI response
+                addMessage(data.response, 'ai', data.credibility_score);
+                
+            } catch (error) {
+                hideTyping();
+                addMessage('Sorry, I encountered an error. Please try again.', 'ai');
+            }
+        }
+        
+        function addMessage(content, sender, score = null) {
+            const messagesArea = document.getElementById('messagesArea');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message-item';
+            
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            if (sender === 'user') {
+                messageDiv.innerHTML = `
+                    <div class="user-message">
+                        <div class="message-bubble user-bubble">
+                            <div class="message-header">
+                                <span class="sender-name">You</span>
+                                <span class="message-time">${time}</span>
+                            </div>
+                            <div class="message-content">
+                                <p>${content}</p>
+                            </div>
+                        </div>
+                        <div class="message-avatar user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="ai-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-bubble ai-bubble">
+                            <div class="message-header">
+                                <span class="sender-name">AI Assistant</span>
+                                <span class="message-time">${time}</span>
+                                ${score ? `<span class="credibility-score">Score: ${score}/100</span>` : ''}
+                            </div>
+                            <div class="message-content">
+                                <p>${content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            messagesArea.appendChild(messageDiv);
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+        
+        function showTyping() {
+            const messagesArea = document.getElementById('messagesArea');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="ai-message">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-bubble ai-bubble">
+                        <div class="typing-animation">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            messagesArea.appendChild(typingDiv);
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+        
+        function hideTyping() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        function clearChat() {
+            const messagesArea = document.getElementById('messagesArea');
+            messagesArea.innerHTML = `
+                <div class="welcome-message">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-bubble ai-message">
+                        <div class="message-header">
+                            <span class="sender-name">AI Assistant</span>
+                            <span class="message-time">Now</span>
+                        </div>
+                        <div class="message-content">
+                            <h4>Welcome to Civic Lens AI Analysis! 🤖</h4>
+                            <p>I'm here to help you verify news credibility and detect misinformation. Simply paste your news content below and I'll provide:</p>
+                            <ul>
+                                <li><strong>Credibility Score</strong> (0-100)</li>
+                                <li><strong>Source Analysis</strong></li>
+                                <li><strong>Bias Detection</strong></li>
+                                <li><strong>Fact Verification</strong></li>
+                            </ul>
+                            <p>Let's start analyzing!</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function exportChat() {
+            // Simple export functionality
+            const messages = document.querySelectorAll('.message-content p');
+            let chatText = 'Civic Lens AI Chat Export\n\n';
+            messages.forEach(msg => {
+                chatText += msg.textContent + '\n\n';
+            });
+            
+            const blob = new Blob([chatText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'civic-lens-chat-export.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
+                <div class="control-group">
+                    <label for="analysisType" class="control-label">Analysis Type</label>
+                    <select id="analysisType" class="analysis-selector">
+                        <option value="full">🔍 Full Analysis</option>
+                        <option value="quick">⚡ Quick Check</option>
+                        <option value="source">🛡️ Source Verification</option>
+                        <option value="bias">📊 Bias Detection</option>
+                    </select>
+                </div>
+                
+                <div class="session-controls">
+                    <button class="control-btn" onclick="exportChat()">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                    <button class="control-btn" onclick="clearChat()">
+                        <i class="fas fa-trash"></i>
+                        Clear
+                    </button>
+                    <button class="control-btn" onclick="newSession()">
+                        <i class="fas fa-plus"></i>
+                        New Session
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Interface -->
+        <div class="chat-interface">
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- Welcome Message -->
+                <div class="message bot-message welcome-message">
+                    <div class="message-header">
+                        <div class="analyst-avatar">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="analyst-info">
+                            <span class="analyst-name">Civic Lens AI Analyst</span>
+                            <span class="analyst-status">Ready for Analysis</span>
+                        </div>
+                    </div>
+                    <div class="message-content enhanced-content">
+                        <h3>Welcome to Civic Lens Solutions AI Analysis</h3>
+                        <p>I'm your professional AI analyst, powered by DeepSeek AI, ready to help you verify news credibility and detect misinformation.</p>
+                        
+                        <div class="capabilities-grid">
+                            <div class="capability-card">
+                                <i class="fas fa-search"></i>
+                                <h4>Credibility Analysis</h4>
+                                <p>Comprehensive fact-checking and source verification</p>
+                            </div>
+                            <div class="capability-card">
+                                <i class="fas fa-chart-line"></i>
+                                <h4>Bias Detection</h4>
+                                <p>Identify political and editorial bias in reporting</p>
+                            </div>
+                            <div class="capability-card">
+                                <i class="fas fa-shield-check"></i>
+                                <h4>Source Verification</h4>
+                                <p>Validate news sources and publication credibility</p>
+                            </div>
+                            <div class="capability-card">
+                                <i class="fas fa-bolt"></i>
+                                <h4>Quick Assessment</h4>
+                                <p>Rapid credibility scoring for urgent news</p>
+                            </div>
+                        </div>
+                        
+                        <p><strong>To get started:</strong> Paste a news article, URL, or ask me to analyze any information!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input Area -->
+            <div class="chat-input-area">
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <button class="quick-action-btn" onclick="quickAction('fact-check')">
+                        <i class="fas fa-check-circle"></i>
+                        Fact Check
+                    </button>
+                    <button class="quick-action-btn" onclick="quickAction('source-check')">
+                        <i class="fas fa-shield-alt"></i>
+                        Source Check
+                    </button>
+                    <button class="quick-action-btn" onclick="quickAction('bias-analysis')">
+                        <i class="fas fa-balance-scale"></i>
+                        Bias Analysis
+                    </button>
+                    <button class="quick-action-btn" onclick="quickAction('credibility-score')">
+                        <i class="fas fa-star"></i>
+                        Credibility Score
+                    </button>
+                </div>
+
+                <!-- Input Container -->
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="chatInput" 
+                            placeholder="Paste a news article, URL, or ask me to analyze any information..."
+                            maxlength="5000"
+                            rows="4"
+                        ></textarea>
+                        <div class="input-controls">
+                            <div class="char-counter">
+                                <span id="charCount">0</span> / 5000
+                            </div>
+                            <button id="sendButton" class="send-btn" onclick="sendMessage()">
+                                <i class="fas fa-paper-plane"></i>
+                                Analyze
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='chatbot-3d.js') }}"></script>
+    <script src="{{ url_for('static', filename='mobile-2025.js') }}"></script>
+
+    <!-- Unified Footer -->
+    {% include 'includes/unified-footer.html' %}
+
+    <script src="{{ url_for('static', filename='chatbot.js') }}"></script>
+        <div class="section-container">
+            <div class="footer-content">
+                <div class="footer-main">
+                    <div class="footer-brand">
+                        <div class="brand-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="brand-text">
+                            <span class="brand-name">Civic Lens Solutions</span>
+                            <span class="brand-tagline">Advanced News Verification Platform</span>
+                        </div>
+                    </div>
+                    <p class="footer-description">
+                        Empowering informed citizenship through cutting-edge AI technology, 
+                        real-time news verification, and community-driven fact-checking.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Platform</h4>
+                        <ul>
+                            <li><a href="/enhanced-chatbot">Enhanced AI Chatbots</a></li>
+                            <li><a href="/ultra-map">Ultra News Map</a></li>
+                            <li><a href="/chatbot">Classic Chatbot</a></li>
+                            <li><a href="/report">Community Reporting</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Features</h4>
+                        <ul>
+                            <li><a href="/#features">AI Analysis</a></li>
+                            <li><a href="/#features">Real-time Mapping</a></li>
+                            <li><a href="/#features">Credibility Scoring</a></li>
+                            <li><a href="/#features">Community Verification</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="/#about">About Us</a></li>
+                            <li><a href="/#contact">Contact</a></li>
+                            <li><a href="/#privacy">Privacy Policy</a></li>
+                            <li><a href="/#terms">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Civic Lens Solutions. All rights reserved.</p>
+                    <p>Powered by advanced AI technology and community collaboration.</p>
+                </div>
+                <div class="footer-badges">
+                    <div class="badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure</span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-lock"></i>
+                        <span>Private</span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Verified</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

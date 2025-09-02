@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Map - Civic Lens Solutions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='civic-lens-design-system.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ultra-index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='map-unified.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='unified-header-footer.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="background-animation">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+    </div>
+
+    <!-- Unified Header -->
+    {% include 'includes/unified-header.html' %}
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-map-marked-alt"></i>
+                MENA Regional News Map
+            </h1>
+            <p class="page-subtitle">Discover critical news and developments across the Middle East & North Africa region</p>
+        </div>
+
+        <!-- Location Controls -->
+        <div class="location-tools">
+            <div class="location-input-group">
+                <button class="location-btn primary" onclick="getCurrentLocation()">
+                    <i class="fas fa-crosshairs"></i>
+                    Use My Location
+                </button>
+                <input type="text" id="locationSearch" class="location-input" 
+                       placeholder="Search for a city or address...">
+                <button class="location-btn secondary" onclick="searchLocation()">
+                    <i class="fas fa-search"></i>
+                    Search
+                </button>
+            </div>
+            
+            <div class="radius-control">
+                <label for="radiusSlider" class="radius-label">Search Radius: <span id="radiusValue">10</span> km</label>
+                <input type="range" id="radiusSlider" min="5" max="50" value="10" class="radius-slider">
+            </div>
+        </div>
+
+        <!-- Map Container -->
+        <div class="map-container">
+            <div id="newsMap" class="news-map">
+                <!-- Interactive map will be rendered here -->
+                <div class="map-placeholder">
+                    <i class="fas fa-map"></i>
+                    <h3>Interactive News Map</h3>
+                    <p>Click "Use My Location" or search for a location to view nearby news events</p>
+                </div>
+            </div>
+            
+            <!-- Map Legend -->
+            <div class="map-legend">
+                <h4>Legend</h4>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <span class="legend-marker critical"></span>
+                        <span>Critical Events</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-marker fake-news"></span>
+                        <span>Fake News Reports</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-marker verified"></span>
+                        <span>Verified News</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-marker user-location"></span>
+                        <span>Your Location</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- News Feed -->
+        <div class="news-feed">
+            <div class="feed-header">
+                <h2 class="feed-title">
+                    <i class="fas fa-newspaper"></i>
+                    Nearby News Feed
+                </h2>
+                <div class="feed-filters">
+                    <select id="newsFilter" class="filter-select">
+                        <option value="all">All News</option>
+                        <option value="critical_event">Critical Events</option>
+                        <option value="fake_news">Fake News</option>
+                        <option value="verified">Verified News</option>
+                    </select>
+                    <select id="timeFilter" class="filter-select">
+                        <option value="24h">Last 24 Hours</option>
+                        <option value="7d">Last 7 Days</option>
+                        <option value="30d">Last 30 Days</option>
+                        <option value="all">All Time</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="newsFeedList" class="news-feed-list">
+                <!-- News items will be loaded here -->
+                <div class="feed-placeholder">
+                    <i class="fas fa-location-arrow"></i>
+                    <p>Set your location to see nearby news events</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Panel -->
+        <div class="stats-panel">
+            <h3 class="stats-title">
+                <i class="fas fa-chart-bar"></i>
+                Local News Statistics
+            </h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon critical">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-number" id="criticalCount">0</span>
+                        <span class="stat-label">Critical Events</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon fake">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-number" id="fakeNewsCount">0</span>
+                        <span class="stat-label">Fake News Reports</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon verified">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-number" id="verifiedCount">0</span>
+                        <span class="stat-label">Verified News</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-number" id="totalCount">0</span>
+                        <span class="stat-label">Total Reports</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unified Footer -->
+    {% include 'includes/unified-footer.html' %}
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='mobile-2025.js') }}"></script>
+    <script>
+        let userLocation = null;
+        let currentRadius = 10;
+
+        // Initialize map functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            setupMapControls();
+            loadSampleData();
+        });
+
+        function setupMapControls() {
+            const radiusSlider = document.getElementById('radiusSlider');
+            const radiusValue = document.getElementById('radiusValue');
+            
+            radiusSlider.addEventListener('input', function() {
+                currentRadius = this.value;
+                radiusValue.textContent = this.value;
+                if (userLocation) {
+                    loadNearbyNews();
+                }
+            });
+
+            // Filter controls
+            document.getElementById('newsFilter').addEventListener('change', filterNews);
+            document.getElementById('timeFilter').addEventListener('change', filterNews);
+        }
+
+        async function getCurrentLocation() {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by this browser.');
+                return;
+            }
+
+            try {
+                const position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject);
+                });
+
+                userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+
+                updateMapWithLocation();
+                loadNearbyNews();
+            } catch (error) {
+                console.error('Error getting location:', error);
+                alert('Unable to get your location. Please try searching manually.');
+            }
+        }
+
+        async function searchLocation() {
+            const searchInput = document.getElementById('locationSearch');
+            const query = searchInput.value.trim();
+            
+            if (!query) return;
+
+            try {
+                // Use a geocoding service to convert address to coordinates
+                const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?localityName=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                
+                if (data.latitude && data.longitude) {
+                    userLocation = {
+                        lat: data.latitude,
+                        lng: data.longitude
+                    };
+                    
+                    updateMapWithLocation();
+                    loadNearbyNews();
+                } else {
+                    alert('Location not found. Please try a different search term.');
+                }
+            } catch (error) {
+                console.error('Geocoding error:', error);
+                alert('Error searching for location. Please try again.');
+            }
+        }
+
+        function updateMapWithLocation() {
+            const mapContainer = document.getElementById('newsMap');
+            mapContainer.innerHTML = `
+                <div class="map-active">
+                    <div class="location-marker user-location">
+                        <i class="fas fa-map-pin"></i>
+                        <span>Your Location</span>
+                    </div>
+                    <div class="radius-circle" style="width: ${currentRadius * 10}px; height: ${currentRadius * 10}px;"></div>
+                    <div class="map-info">
+                        <p>Location: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}</p>
+                        <p>Search Radius: ${currentRadius} km</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadNearbyNews() {
+            if (!userLocation) return;
+
+            try {
+                const response = await fetch('/nearby-news', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        lat: userLocation.lat,
+                        lng: userLocation.lng,
+                        radius: currentRadius
+                    })
+                });
+
+                const nearbyNews = await response.json();
+                displayNearbyNews(nearbyNews);
+                updateStatistics(nearbyNews);
+                addNewsMarkersToMap(nearbyNews);
+            } catch (error) {
+                console.error('Error loading nearby news:', error);
+            }
+        }
+
+        function displayNearbyNews(newsItems) {
+            const feedList = document.getElementById('newsFeedList');
+            
+            if (newsItems.length === 0) {
+                feedList.innerHTML = `
+                    <div class="feed-placeholder">
+                        <i class="fas fa-info-circle"></i>
+                        <p>No news events found in your area</p>
+                    </div>
+                `;
+                return;
+            }
+
+            feedList.innerHTML = newsItems.map(item => `
+                <div class="news-item ${item.type}" data-type="${item.type}">
+                    <div class="news-header">
+                        <h4 class="news-title">${item.title}</h4>
+                        <div class="news-meta">
+                            <span class="news-distance">
+                                <i class="fas fa-map-marker-alt"></i>
+                                ${item.distance} km away
+                            </span>
+                            <span class="news-type ${item.type}">
+                                ${getTypeIcon(item.type)} ${item.type.replace('_', ' ')}
+                            </span>
+                        </div>
+                    </div>
+                    <p class="news-content">${item.content}</p>
+                    <div class="news-footer">
+                        <span class="news-location">
+                            <i class="fas fa-map-pin"></i>
+                            ${item.location}
+                        </span>
+                        <span class="news-credibility">
+                            Score: ${item.credibility_score || 'N/A'}
+                        </span>
+                        <span class="news-time">
+                            ${formatTime(item.timestamp)}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addNewsMarkersToMap(newsItems) {
+            const mapContainer = document.getElementById('newsMap');
+            const existingMarkers = mapContainer.querySelectorAll('.news-marker');
+            existingMarkers.forEach(marker => marker.remove());
+
+            newsItems.forEach((item, index) => {
+                const marker = document.createElement('div');
+                marker.className = `news-marker ${item.type}`;
+                marker.style.left = `${50 + (index % 3 - 1) * 20}%`;
+                marker.style.top = `${50 + (Math.floor(index / 3) % 3 - 1) * 20}%`;
+                marker.innerHTML = `
+                    <i class="fas fa-${getMarkerIcon(item.type)}"></i>
+                    <div class="marker-tooltip">
+                        <strong>${item.title}</strong><br>
+                        ${item.distance} km away
+                    </div>
+                `;
+                mapContainer.appendChild(marker);
+            });
+        }
+
+        function updateStatistics(newsItems) {
+            const stats = {
+                critical: newsItems.filter(item => item.type === 'critical_event').length,
+                fake: newsItems.filter(item => item.type === 'fake_news').length,
+                verified: newsItems.filter(item => item.credibility_score >= 80).length,
+                total: newsItems.length
+            };
+
+            document.getElementById('criticalCount').textContent = stats.critical;
+            document.getElementById('fakeNewsCount').textContent = stats.fake;
+            document.getElementById('verifiedCount').textContent = stats.verified;
+            document.getElementById('totalCount').textContent = stats.total;
+        }
+
+        function filterNews() {
+            const newsFilter = document.getElementById('newsFilter').value;
+            const timeFilter = document.getElementById('timeFilter').value;
+            const newsItems = document.querySelectorAll('.news-item');
+
+            newsItems.forEach(item => {
+                let show = true;
+
+                // Filter by type
+                if (newsFilter !== 'all') {
+                    const itemType = item.dataset.type;
+                    if (newsFilter === 'verified') {
+                        // Show items with high credibility score
+                        show = item.textContent.includes('Score: 8') || item.textContent.includes('Score: 9');
+                    } else {
+                        show = itemType === newsFilter;
+                    }
+                }
+
+                item.style.display = show ? 'block' : 'none';
+            });
+        }
+
+        function loadSampleData() {
+            // MENA Region News Data with Geographic Coordinates
+            const menaNews = [
+                {
+                    id: 1,
+                    title: "🇶🇦 Qatar Vision 2030 Progress Report",
+                    description: "Major infrastructure developments and economic diversification milestones achieved",
+                    location: { lat: 25.2854, lng: 51.5310 }, // Doha, Qatar
+                    type: "verified",
+                    timestamp: "2 hours ago",
+                    credibility: 95,
+                    country: "Qatar"
+                },
+                {
+                    id: 2,
+                    title: "🇦🇪 UAE Space Program Milestone",
+                    description: "Emirates Mars Mission achieves new scientific breakthrough",
+                    location: { lat: 24.4539, lng: 54.3773 }, // Abu Dhabi, UAE
+                    type: "verified",
+                    timestamp: "4 hours ago",
+                    credibility: 92,
+                    country: "UAE"
+                },
+                {
+                    id: 3,
+                    title: "🇸🇦 NEOM Smart City Construction Update",
+                    description: "Sustainable technology integration reaches new phase in Saudi Arabia's futuristic city",
+                    location: { lat: 24.7136, lng: 46.6753 }, // Riyadh, Saudi Arabia
+                    type: "verified",
+                    timestamp: "6 hours ago",
+                    credibility: 89,
+                    country: "Saudi Arabia"
+                },
+                {
+                    id: 4,
+                    title: "🇪🇬 Egypt New Administrative Capital Progress",
+                    description: "Government buildings relocation and infrastructure development updates",
+                    location: { lat: 30.0444, lng: 31.2357 }, // Cairo, Egypt
+                    type: "verified",
+                    timestamp: "8 hours ago",
+                    credibility: 87,
+                    country: "Egypt"
+                },
+                {
+                    id: 5,
+                    title: "🇯🇴 Jordan Water Conservation Initiative",
+                    description: "Regional water security conference announces new sustainability measures",
+                    location: { lat: 31.9454, lng: 35.9284 }, // Amman, Jordan
+                    type: "verified",
+                    timestamp: "12 hours ago",
+                    credibility: 91,
+                    country: "Jordan"
+                },
+                {
+                    id: 6,
+                    title: "🇱🇧 Lebanon Economic Recovery Plan",
+                    description: "Banking sector reforms and international aid coordination efforts",
+                    location: { lat: 33.8938, lng: 35.5018 }, // Beirut, Lebanon
+                    type: "verified",
+                    timestamp: "1 day ago",
+                    credibility: 84,
+                    country: "Lebanon"
+                },
+                {
+                    id: 7,
+                    title: "🇰🇼 Kuwait Green Energy Transition",
+                    description: "Renewable energy projects and sustainability initiatives launched",
+                    location: { lat: 29.3117, lng: 47.4818 }, // Kuwait City, Kuwait
+                    type: "verified",
+                    timestamp: "1 day ago",
+                    credibility: 88,
+                    country: "Kuwait"
+                },
+                {
+                    id: 8,
+                    title: "🇧🇭 Bahrain FinTech Hub Expansion",
+                    description: "Financial technology sector growth and digital banking innovations",
+                    location: { lat: 26.0667, lng: 50.5577 }, // Manama, Bahrain
+                    type: "verified",
+                    timestamp: "2 days ago",
+                    credibility: 90,
+                    country: "Bahrain"
+                },
+                {
+                    id: 9,
+                    title: "🇴🇲 Oman Tourism Development",
+                    description: "Cultural heritage sites and eco-tourism initiatives boost regional tourism",
+                    location: { lat: 23.5859, lng: 58.4059 }, // Muscat, Oman
+                    type: "verified",
+                    timestamp: "2 days ago",
+                    credibility: 86,
+                    country: "Oman"
+                },
+                {
+                    id: 10,
+                    title: "🇲🇦 Morocco Renewable Energy Project",
+                    description: "Solar power installations and green energy infrastructure development",
+                    location: { lat: 34.0209, lng: -6.8416 }, // Rabat, Morocco
+                    type: "verified",
+                    timestamp: "3 days ago",
+                    credibility: 93,
+                    country: "Morocco"
+                },
+                {
+                    id: 11,
+                    title: "🇹🇳 Tunisia Digital Transformation",
+                    description: "E-government services and digital infrastructure modernization efforts",
+                    location: { lat: 36.8065, lng: 10.1815 }, // Tunis, Tunisia
+                    type: "verified",
+                    timestamp: "3 days ago",
+                    credibility: 85,
+                    country: "Tunisia"
+                }
+            ];
+            
+            displayNearbyNews(menaNews);
+            addNewsMarkersToMap(menaNews);
+            updateStatistics(menaNews);
+        }
+
+        function getTypeIcon(type) {
+            const icons = {
+                'critical_event': '⚠️',
+                'fake_news': '🚫',
+                'verified': '✅',
+                'misinformation': '📢'
+            };
+            return icons[type] || '📰';
+        }
+
+        function getMarkerIcon(type) {
+            const icons = {
+                'critical_event': 'exclamation-triangle',
+                'fake_news': 'times-circle',
+                'verified': 'check-circle',
+                'misinformation': 'bullhorn'
+            };
+            return icons[type] || 'newspaper';
+        }
+
+        function formatTime(timestamp) {
+            return new Date(timestamp).toLocaleString();
+        }
+    </script>
+
+    <!-- Unified Footer -->
+    <footer class="ultra-footer">
+        <div class="footer-background">
+            <div class="footer-gradient"></div>
+        </div>
+        <div class="section-container">
+            <div class="footer-content">
+                <div class="footer-main">
+                    <div class="footer-brand">
+                        <div class="brand-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="brand-text">
+                            <span class="brand-name">Civic Lens Solutions</span>
+                            <span class="brand-tagline">Advanced News Verification Platform</span>
+                        </div>
+                    </div>
+                    <p class="footer-description">
+                        Empowering informed citizenship through cutting-edge AI technology, 
+                        real-time news verification, and community-driven fact-checking.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Platform</h4>
+                        <ul>
+                            <li><a href="/enhanced-chatbot">Enhanced AI Chatbots</a></li>
+                            <li><a href="/ultra-map">Ultra News Map</a></li>
+                            <li><a href="/chatbot">Classic Chatbot</a></li>
+                            <li><a href="/report">Community Reporting</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Features</h4>
+                        <ul>
+                            <li><a href="/#features">AI Analysis</a></li>
+                            <li><a href="/#features">Real-time Mapping</a></li>
+                            <li><a href="/#features">Credibility Scoring</a></li>
+                            <li><a href="/#features">Community Verification</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="/#about">About Us</a></li>
+                            <li><a href="/#contact">Contact</a></li>
+                            <li><a href="/#privacy">Privacy Policy</a></li>
+                            <li><a href="/#terms">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Civic Lens Solutions. All rights reserved.</p>
+                    <p>Powered by advanced AI technology and community collaboration.</p>
+                </div>
+                <div class="footer-badges">
+                    <div class="badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure</span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-lock"></i>
+                        <span>Private</span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Verified</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

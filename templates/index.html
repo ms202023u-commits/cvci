@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Civic Lens Solutions - AI-Powered News Verification Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='civic-lens-design-system.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='unified-header-footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ultra-index.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+    </div>
+
+    <!-- Unified Header -->
+    {% include 'includes/unified-header.html' %}
+
+
+    <main class="main">
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <span>👁️ Civic Lens Solutions - See Through Misinformation</span>
+                    </div>
+                    <h2 class="hero-title">
+                        <span class="brand-text">Civic Lens Solutions</span><br>
+                        <span class="hero-title-main">News Verification Platform</span>
+                    </h2>
+                    <p class="hero-description">Empower your civic engagement with AI-powered news verification. Detect misinformation, verify sources, and stay informed about critical events in your community.</p>
+                    
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <div class="stat-number" id="analyzedCount">1,247</div>
+                            <div class="stat-label">Articles Analyzed</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="accuracyRate">94.7%</div>
+                            <div class="stat-label">Accuracy Rate</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="reportsCount">89</div>
+                            <div class="stat-label">Reports Filed</div>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary btn-3d" onclick="scrollToSection('chat')">
+                            <i class="fas fa-comments"></i>
+                            <span>Start AI Analysis</span>
+                            <div class="btn-glow"></div>
+                        </button>
+                        <button class="btn btn-secondary btn-3d" onclick="scrollToSection('location')">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Find Near Me</span>
+                            <div class="btn-glow"></div>
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="floating-dashboard">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <i class="fas fa-brain"></i>
+                                <span>AI Analysis</span>
+                            </div>
+                            <div class="analysis-visual">
+                                <div class="progress-ring">
+                                    <svg class="progress-ring-svg" width="120" height="120">
+                                        <circle class="progress-ring-circle" stroke="#4a90e2" stroke-width="4" fill="transparent" r="52" cx="60" cy="60"/>
+                                    </svg>
+                                    <div class="progress-text">87%</div>
+                                </div>
+                                <div class="analysis-details">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Credibility</span>
+                                        <span class="detail-value high">High</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Sources</span>
+                                        <span class="detail-value">Verified</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Location-Based News Section -->
+        <section id="location" class="location-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2><i class="fas fa-map-marker-alt"></i> Critical News Near You</h2>
+                    <p>Discover important events and news happening in your area</p>
+                </div>
+                
+                <div class="location-tools">
+                    <div class="location-input-card glass-morphism">
+                        <div class="card-header">
+                            <i class="fas fa-location-crosshairs"></i>
+                            <span>Location Settings</span>
+                        </div>
+                        <div class="location-controls">
+                            <button id="detectLocationBtn" class="btn btn-primary btn-3d">
+                                <i class="fas fa-crosshairs"></i>
+                                <span>Detect My Location</span>
+                                <div class="btn-glow"></div>
+                            </button>
+                            <div class="location-input-group">
+                                <input type="text" id="manualLocation" placeholder="Or enter city, address..." class="location-input">
+                                <button id="searchLocationBtn" class="btn btn-secondary">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            <div class="radius-selector">
+                                <label>Search Radius:</label>
+                                <select id="radiusSelect">
+                                    <option value="5">5 km</option>
+                                    <option value="10" selected>10 km</option>
+                                    <option value="25">25 km</option>
+                                    <option value="50">50 km</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="location-map-card glass-morphism">
+                        <div class="card-header">
+                            <i class="fas fa-map"></i>
+                            <span>Live News Map</span>
+                            <div class="status-indicator">
+                                <div class="pulse-dot"></div>
+                                <span>Live</span>
+                            </div>
+                        </div>
+                        <div class="map-container" id="newsMap">
+                            <div class="map-placeholder">
+                                <i class="fas fa-map-marked-alt"></i>
+                                <p>Enable location to see critical news near you</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="nearby-news-grid" id="nearbyNewsGrid">
+                    <div class="news-card-3d">
+                        <div class="news-card-header">
+                            <span class="news-type critical">Critical</span>
+                            <span class="news-distance">2.3 km</span>
+                        </div>
+                        <h3>Sample Critical Event</h3>
+                        <p>This is a sample of how critical news near your location will appear...</p>
+                        <div class="news-meta">
+                            <span><i class="fas fa-clock"></i> 2 hours ago</span>
+                            <span><i class="fas fa-eye"></i> 1.2k views</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chat Section -->
+        <section id="chat" class="chat-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2><i class="fas fa-comments-dollar"></i> Civic Lens AI Analyst</h2>
+                    <p>Professional news verification and credibility assessment</p>
+                </div>
+                
+                <div class="chat-container-professional glass-morphism">
+                    <div class="chat-header-professional">
+                        <div class="analyst-profile">
+                            <div class="analyst-avatar">
+                                <div class="avatar-status-ring"></div>
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="analyst-details">
+                                <h3>Civic Lens AI Analyst</h3>
+                                <div class="analyst-credentials">
+                                    <span class="credential-badge">Verified AI</span>
+                                    <span class="status-indicator">
+                                        <i class="fas fa-circle"></i> Online
+                                    </span>
+                                </div>
+                                <p class="analyst-specialty">News Verification Specialist</p>
+                            </div>
+                        </div>
+                        <div class="session-info">
+                            <div class="session-stats">
+                                <div class="stat-professional">
+                                    <span class="stat-number">98.7%</span>
+                                    <span class="stat-description">Accuracy Rate</span>
+                                </div>
+                                <div class="stat-professional">
+                                    <span class="stat-number">24/7</span>
+                                    <span class="stat-description">Available</span>
+                                </div>
+                            </div>
+                            <div class="session-controls">
+                                <button class="control-btn" title="New Session">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <button class="control-btn" title="Export Chat">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="control-btn" title="Settings">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages-professional" id="chatMessages">
+                        <div class="welcome-card">
+                            <div class="welcome-header">
+                                <i class="fas fa-handshake"></i>
+                                <h4>Welcome to Civic Lens Professional Analysis</h4>
+                            </div>
+                            <div class="welcome-content">
+                                <p>I'm your dedicated AI analyst, specialized in news verification and civic information assessment. I provide:</p>
+                                <div class="service-grid">
+                                    <div class="service-item">
+                                        <i class="fas fa-search"></i>
+                                        <span>Credibility Analysis</span>
+                                    </div>
+                                    <div class="service-item">
+                                        <i class="fas fa-shield-check"></i>
+                                        <span>Source Verification</span>
+                                    </div>
+                                    <div class="service-item">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>Bias Detection</span>
+                                    </div>
+                                    <div class="service-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span>Real-time Analysis</span>
+                                    </div>
+                                </div>
+                                <div class="getting-started">
+                                    <p><strong>Getting Started:</strong> Paste a news article, URL, or ask me to verify any information. I'll provide a comprehensive analysis with credibility scores and recommendations.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-professional">
+                        <div class="input-header">
+                            <span class="input-label">Submit for Analysis</span>
+                            <div class="input-tools-professional">
+                                <button class="tool-btn-pro" title="Paste from clipboard">
+                                    <i class="fas fa-clipboard"></i>
+                                </button>
+                                <button class="tool-btn-pro" title="Upload document">
+                                    <i class="fas fa-file-upload"></i>
+                                </button>
+                                <button class="tool-btn-pro" title="Voice input">
+                                    <i class="fas fa-microphone"></i>
+                                </button>
+                                <button class="tool-btn-pro" title="URL analysis">
+                                    <i class="fas fa-link"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="input-wrapper-professional">
+                            <div class="input-field-container">
+                                <textarea id="chatInput" placeholder="Paste news article, enter URL, or describe the information you'd like me to verify..." rows="4"></textarea>
+                                <div class="input-footer">
+                                    <div class="character-count">
+                                        <span id="charCount">0</span> / 5000 characters
+                                    </div>
+                                    <div class="analysis-type">
+                                        <select id="analysisType">
+                                            <option value="full">Full Analysis</option>
+                                            <option value="quick">Quick Check</option>
+                                            <option value="source">Source Verification</option>
+                                            <option value="bias">Bias Detection</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="sendBtn" class="btn-professional btn-analyze">
+                                <i class="fas fa-search"></i>
+                                <span>Analyze</span>
+                                <div class="btn-glow"></div>
+                            </button>
+                        </div>
+                        <div class="quick-actions">
+                            <div class="action-category">
+                                <span class="category-label">Quick Actions:</span>
+                                <div class="action-chips">
+                                    <button class="action-chip">Fact Check</button>
+                                    <button class="action-chip">Source Check</button>
+                                    <button class="action-chip">Bias Analysis</button>
+                                    <button class="action-chip">Credibility Score</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Report Section -->
+        <section id="report" class="report-section">
+            <div class="container">
+                <h2><i class="fas fa-flag"></i> Report Fake News or Critical Events</h2>
+                <div class="report-form-container">
+                    <form id="reportForm" class="report-form">
+                        <div class="form-group">
+                            <label for="reportType">Report Type</label>
+                            <select id="reportType" name="type" required>
+                                <option value="fake_news">Fake News</option>
+                                <option value="critical_event">Critical Event</option>
+                                <option value="misinformation">Misinformation</option>
+                                <option value="suspicious_content">Suspicious Content</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newsTitle">News Title</label>
+                            <input type="text" id="newsTitle" name="title" placeholder="Enter the news headline" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newsContent">News Content</label>
+                            <textarea id="newsContent" name="content" placeholder="Paste the full news article content here..." rows="6" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newsUrl">Source URL (Optional)</label>
+                            <input type="url" id="newsUrl" name="url" placeholder="https://example.com/news-article">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" name="location" placeholder="City, Country or 'Near me'">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Submit Report
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reports Section -->
+        <section id="reports" class="reports-section">
+            <div class="container">
+                <h2><i class="fas fa-list"></i> Recent Reports</h2>
+                <div class="reports-container" id="reportsContainer">
+                    <div class="loading">Loading reports...</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Unified Footer -->
+    <footer class="ultra-footer">
+        <div class="footer-background">
+            <div class="footer-gradient"></div>
+        </div>
+        <div class="section-container">
+            <div class="footer-content">
+                <div class="footer-main">
+                    <div class="footer-brand">
+                        <div class="brand-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="brand-text">
+                            <span class="brand-name">Civic Lens Solutions</span>
+                            <span class="brand-tagline">Advanced News Verification Platform</span>
+                        </div>
+                    </div>
+                    <p class="footer-description">
+                        Empowering informed citizenship through cutting-edge AI technology, 
+                        real-time news verification, and community-driven fact-checking.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Platform</h4>
+                        <ul>
+                            <li><a href="/enhanced-chatbot">Enhanced AI Chatbots</a></li>
+                            <li><a href="/ultra-map">Ultra News Map</a></li>
+                            <li><a href="/chatbot">Classic Chatbot</a></li>
+                            <li><a href="/report">Community Reporting</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Features</h4>
+                        <ul>
+                            <li><a href="/#features">AI Analysis</a></li>
+                            <li><a href="/#features">Real-time Mapping</a></li>
+                            <li><a href="/#features">Credibility Scoring</a></li>
+                            <li><a href="/#features">Community Verification</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="/#about">About Us</a></li>
+                            <li><a href="/#contact">Contact</a></li>
+                            <li><a href="/#privacy">Privacy Policy</a></li>
+                            <li><a href="/#terms">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Civic Lens Solutions. All rights reserved.</p>
+                    <p>Powered by advanced AI technology and community collaboration.</p>
+                </div>
+                <div class="footer-badges">
+                    <div class="badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure</span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-lock"></i>
+                        <span>Private</span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Verified</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Unified Footer -->
+    {% include 'includes/unified-footer.html' %}
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='mobile-2025.js') }}"></script>
+</body>
+</html>

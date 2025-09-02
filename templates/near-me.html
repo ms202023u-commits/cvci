@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Near Me - Civic Lens Solutions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='civic-lens-design-system.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='unified-header-footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='near-me.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+    <!-- Unified Header -->
+    {% include 'includes/unified-header.html' %}
+
+    <!-- Near Me Page -->
+    <div class="near-me-page">
+        <!-- Hero Section -->
+        <div class="near-me-hero">
+            <div class="hero-content">
+                <div class="hero-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h1 class="hero-title">MENA Regional Hub</h1>
+                <p class="hero-description">Discover regional news, reports, and civic information across the Middle East & North Africa with AI-powered insights</p>
+                <div class="location-badge" id="locationBadge">
+                    <i class="fas fa-location-dot"></i>
+                    <span>Finding your location...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="near-me-content">
+            <!-- Search and Filters -->
+            <div class="search-section">
+                <div class="search-container">
+                    <div class="mena-country-selector">
+                        <label for="countrySelect">Select MENA Country:</label>
+                        <select id="countrySelect" class="country-select">
+                            <option value="all">All MENA Region</option>
+                            <option value="qatar">🇶🇦 Qatar</option>
+                            <option value="uae">🇦🇪 United Arab Emirates</option>
+                            <option value="saudi">🇸🇦 Saudi Arabia</option>
+                            <option value="kuwait">🇰🇼 Kuwait</option>
+                            <option value="bahrain">🇧🇭 Bahrain</option>
+                            <option value="oman">🇴🇲 Oman</option>
+                            <option value="jordan">🇯🇴 Jordan</option>
+                            <option value="lebanon">🇱🇧 Lebanon</option>
+                            <option value="egypt">🇪🇬 Egypt</option>
+                            <option value="morocco">🇲🇦 Morocco</option>
+                            <option value="tunisia">🇹🇳 Tunisia</option>
+                        </select>
+                    </div>
+                    <div class="search-input-group">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search MENA news, reports, and regional information..." class="search-input">
+                        <button class="search-btn" id="searchBtn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="report-actions">
+                        <button class="report-btn" id="generateReportBtn">
+                            <i class="fas fa-file-alt"></i>
+                            Generate MENA Report
+                        </button>
+                        <button class="report-btn" id="submitReportBtn">
+                            <i class="fas fa-plus"></i>
+                            Submit Regional Report
+                        </button>
+                    </div>
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-filter="all">
+                            <i class="fas fa-globe"></i>
+                            <span>All</span>
+                        </button>
+                        <button class="filter-tab" data-filter="news">
+                            <i class="fas fa-newspaper"></i>
+                            <span>News</span>
+                        </button>
+                        <button class="filter-tab" data-filter="events">
+                            <i class="fas fa-calendar"></i>
+                            <span>Events</span>
+                        </button>
+                        <button class="filter-tab" data-filter="civic">
+                            <i class="fas fa-landmark"></i>
+                            <span>Civic</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map and Content Layout -->
+            <div class="content-layout">
+                <!-- Left Sidebar - Results -->
+                <div class="results-sidebar">
+                    <div class="sidebar-header">
+                        <h3>MENA Regional Updates</h3>
+                        <div class="results-count" id="resultsCount">12 items found</div>
+                    </div>
+                    <div class="results-list" id="resultsList">
+                        <!-- MENA Regional Results -->
+                        <div class="result-item" data-country="qatar">
+                            <div class="result-icon news">
+                                <i class="fas fa-newspaper"></i>
+                            </div>
+                            <div class="result-content">
+                                <h4>🇶🇦 Qatar Economic Diversification Report</h4>
+                                <p>Latest developments in Qatar's Vision 2030 economic transformation initiatives</p>
+                                <div class="result-meta">
+                                    <span class="country">Qatar</span>
+                                    <span class="time">2 hours ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-item" data-country="uae">
+                            <div class="result-icon events">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="result-content">
+                                <h4>🇦🇪 UAE Tech Summit 2025</h4>
+                                <p>Major technology conference in Dubai featuring AI and blockchain innovations</p>
+                                <div class="result-meta">
+                                    <span class="country">UAE</span>
+                                    <span class="time">Next Month</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-item" data-country="saudi">
+                            <div class="result-icon civic">
+                                <i class="fas fa-landmark"></i>
+                            </div>
+                            <div class="result-content">
+                                <h4>🇸🇦 NEOM Smart City Progress</h4>
+                                <p>Construction updates and sustainability milestones in Saudi Arabia's futuristic city</p>
+                                <div class="result-meta">
+                                    <span class="country">Saudi Arabia</span>
+                                    <span class="time">1 day ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-item" data-country="egypt">
+                            <div class="result-icon news">
+                                <i class="fas fa-newspaper"></i>
+                            </div>
+                            <div class="result-content">
+                                <h4>🇪🇬 Egypt New Administrative Capital</h4>
+                                <p>Infrastructure development and government relocation updates from Cairo</p>
+                                <div class="result-meta">
+                                    <span class="country">Egypt</span>
+                                    <span class="time">6 hours ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-item" data-country="jordan">
+                            <div class="result-icon events">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="result-content">
+                                <h4>🇯🇴 Jordan Water Conservation Initiative</h4>
+                                <p>Regional conference on water security and sustainable management solutions</p>
+                                <div class="result-meta">
+                                    <span class="country">Jordan</span>
+                                    <span class="time">This Week</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-item" data-country="lebanon">
+                            <div class="result-icon civic">
+                                <i class="fas fa-landmark"></i>
+                            </div>
+                            <div class="result-content">
+                                <h4>🇱🇧 Lebanon Economic Recovery Plan</h4>
+                                <p>Government initiatives for financial sector reform and international aid coordination</p>
+                                <div class="result-meta">
+                                    <span class="country">Lebanon</span>
+                                    <span class="time">3 days ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Map Area -->
+                <div class="map-container">
+                    <div class="map-header">
+                        <div class="map-title">
+                            <h3>Interactive Map</h3>
+                            <span class="map-subtitle">Explore your local area</span>
+                        </div>
+                        <div class="map-controls">
+                            <button class="map-control-btn" id="locateBtn" title="Find My Location">
+                                <i class="fas fa-location-crosshairs"></i>
+                            </button>
+                            <button class="map-control-btn" id="layersBtn" title="Map Layers">
+                                <i class="fas fa-layers"></i>
+                            </button>
+                            <button class="map-control-btn" id="fullscreenBtn" title="Fullscreen">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="map" class="map"></div>
+                    <div class="map-legend">
+                        <div class="legend-item">
+                            <div class="legend-color news"></div>
+                            <span>News</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color events"></div>
+                            <span>Events</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color civic"></div>
+                            <span>Civic</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar - MENA Details -->
+                <div class="details-sidebar">
+                    <div class="sidebar-header">
+                        <h3>MENA Regional Stats</h3>
+                    </div>
+                    <div class="quick-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-globe-americas"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number">11</div>
+                                <div class="stat-label">MENA Countries</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number">247</div>
+                                <div class="stat-label">Active Reports</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number">450M</div>
+                                <div class="stat-label">Population</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mena-insights">
+                        <h4>Regional Insights</h4>
+                        <div class="insight-item">
+                            <div class="insight-icon">
+                                <i class="fas fa-oil-can"></i>
+                            </div>
+                            <div class="insight-content">
+                                <div class="insight-title">Energy Sector</div>
+                                <div class="insight-desc">65% of global oil reserves</div>
+                            </div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="insight-content">
+                                <div class="insight-title">Economic Growth</div>
+                                <div class="insight-desc">4.2% average GDP growth</div>
+                            </div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-icon">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <div class="insight-content">
+                                <div class="insight-title">Tech Innovation</div>
+                                <div class="insight-desc">$12B invested in 2024</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="weather-widget">
+                        <h4>Local Weather</h4>
+                        <div class="weather-info">
+                            <div class="weather-icon">
+                                <i class="fas fa-sun"></i>
+                            </div>
+                            <div class="weather-details">
+                                <div class="temperature">72°F</div>
+                                <div class="condition">Sunny</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="emergency-info">
+                        <h4>Emergency Contacts</h4>
+                        <div class="emergency-list">
+                            <div class="emergency-item">
+                                <i class="fas fa-phone"></i>
+                                <span>Emergency: 911</span>
+                            </div>
+                            <div class="emergency-item">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Police: (555) 123-4567</span>
+                            </div>
+                            <div class="emergency-item">
+                                <i class="fas fa-fire"></i>
+                                <span>Fire Dept: (555) 234-5678</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unified Footer -->
+    {% include 'includes/unified-footer.html' %}
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- MENA Reporting Styles -->
+    <style>
+        .mena-country-selector {
+            margin-bottom: 1rem;
+        }
+        
+        .mena-country-selector label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .country-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .country-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .report-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .report-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .report-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+        
+        .mena-insights {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .mena-insights h4 {
+            margin-bottom: 1rem;
+            color: #1f2937;
+            font-weight: 700;
+        }
+        
+        .insight-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .insight-item:last-child {
+            border-bottom: none;
+        }
+        
+        .insight-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .insight-content {
+            flex: 1;
+        }
+        
+        .insight-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+        
+        .insight-desc {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .result-item[data-country] {
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .result-meta .country {
+            background: #3b82f6;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        /* Report Modal Styles */
+        .report-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+    </style>
+    
+    <!-- Report Modal -->
+    <div id="reportModal" class="report-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Submit MENA Regional Report</h3>
+                <button class="close-btn" onclick="closeReportModal()">&times;</button>
+            </div>
+            <form id="reportForm">
+                <div class="form-group">
+                    <label for="reportCountry">Country</label>
+                    <select id="reportCountry" required>
+                        <option value="">Select Country</option>
+                        <option value="qatar">🇶🇦 Qatar</option>
+                        <option value="uae">🇦🇪 United Arab Emirates</option>
+                        <option value="saudi">🇸🇦 Saudi Arabia</option>
+                        <option value="kuwait">🇰🇼 Kuwait</option>
+                        <option value="bahrain">🇧🇭 Bahrain</option>
+                        <option value="oman">🇴🇲 Oman</option>
+                        <option value="jordan">🇯🇴 Jordan</option>
+                        <option value="lebanon">🇱🇧 Lebanon</option>
+                        <option value="egypt">🇪🇬 Egypt</option>
+                        <option value="morocco">🇲🇦 Morocco</option>
+                        <option value="tunisia">🇹🇳 Tunisia</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="reportTitle">Report Title</label>
+                    <input type="text" id="reportTitle" placeholder="Enter report title" required>
+                </div>
+                <div class="form-group">
+                    <label for="reportCategory">Category</label>
+                    <select id="reportCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="economic">Economic Development</option>
+                        <option value="political">Political Affairs</option>
+                        <option value="social">Social Issues</option>
+                        <option value="technology">Technology & Innovation</option>
+                        <option value="environment">Environmental</option>
+                        <option value="infrastructure">Infrastructure</option>
+                        <option value="education">Education</option>
+                        <option value="healthcare">Healthcare</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="reportContent">Report Content</label>
+                    <textarea id="reportContent" placeholder="Enter detailed report content..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="report-btn" style="width: 100%; justify-content: center;">
+                        <i class="fas fa-paper-plane"></i>
+                        Submit Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- MENA Reporting JavaScript -->
+    <script>
+        // MENA Country Data
+        const menaCountries = {
+            qatar: {
+                name: 'Qatar',
+                flag: '🇶🇦',
+                capital: 'Doha',
+                population: '2.9M',
+                gdp: '$175B',
+                insights: ['Vision 2030', 'World Cup Legacy', 'Energy Transition']
+            },
+            uae: {
+                name: 'United Arab Emirates',
+                flag: '🇦🇪',
+                capital: 'Abu Dhabi',
+                population: '9.9M',
+                gdp: '$421B',
+                insights: ['Dubai 2071', 'Renewable Energy', 'Space Program']
+            },
+            saudi: {
+                name: 'Saudi Arabia',
+                flag: '🇸🇦',
+                capital: 'Riyadh',
+                population: '35M',
+                gdp: '$833B',
+                insights: ['NEOM City', 'Vision 2030', 'Oil Diversification']
+            },
+            egypt: {
+                name: 'Egypt',
+                flag: '🇪🇬',
+                capital: 'Cairo',
+                population: '104M',
+                gdp: '$469B',
+                insights: ['New Capital', 'Suez Canal', 'Tourism Recovery']
+            },
+            jordan: {
+                name: 'Jordan',
+                flag: '🇯🇴',
+                capital: 'Amman',
+                population: '10.2M',
+                gdp: '$47B',
+                insights: ['Water Security', 'Refugee Support', 'Tech Hub']
+            },
+            lebanon: {
+                name: 'Lebanon',
+                flag: '🇱🇧',
+                capital: 'Beirut',
+                population: '6.8M',
+                gdp: '$18B',
+                insights: ['Economic Recovery', 'Banking Reform', 'Reconstruction']
+            }
+        };
+        
+        // Initialize MENA functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Country selector change handler
+            const countrySelect = document.getElementById('countrySelect');
+            countrySelect.addEventListener('change', filterByCountry);
+            
+            // Report button handlers
+            document.getElementById('generateReportBtn').addEventListener('click', generateMenaReport);
+            document.getElementById('submitReportBtn').addEventListener('click', openReportModal);
+            
+            // Report form handler
+            document.getElementById('reportForm').addEventListener('submit', submitReport);
+        });
+        
+        // Filter results by selected country
+        function filterByCountry() {
+            const selectedCountry = document.getElementById('countrySelect').value;
+            const resultItems = document.querySelectorAll('.result-item[data-country]');
+            
+            resultItems.forEach(item => {
+                if (selectedCountry === 'all' || item.dataset.country === selectedCountry) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Update results count
+            const visibleItems = document.querySelectorAll('.result-item[data-country][style*="block"], .result-item[data-country]:not([style])');
+            document.getElementById('resultsCount').textContent = `${visibleItems.length} items found`;
+        }
+        
+        // Generate MENA report
+        function generateMenaReport() {
+            const selectedCountry = document.getElementById('countrySelect').value;
+            let reportContent = '';
+            
+            if (selectedCountry === 'all') {
+                reportContent = generateRegionalReport();
+            } else {
+                reportContent = generateCountryReport(selectedCountry);
+            }
+            
+            // Create and download report
+            const blob = new Blob([reportContent], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `MENA_Report_${selectedCountry}_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            alert('MENA report generated and downloaded successfully!');
+        }
+        
+        // Generate regional report
+        function generateRegionalReport() {
+            return `MENA REGIONAL REPORT\n` +
+                   `Generated: ${new Date().toLocaleDateString()}\n\n` +
+                   `EXECUTIVE SUMMARY\n` +
+                   `The Middle East and North Africa region continues to show strong economic diversification efforts...\n\n` +
+                   `KEY STATISTICS\n` +
+                   `- Total Population: 450+ Million\n` +
+                   `- Combined GDP: $3.2+ Trillion\n` +
+                   `- Oil Reserves: 65% of global reserves\n` +
+                   `- Tech Investment: $12B in 2024\n\n` +
+                   `REGIONAL TRENDS\n` +
+                   `1. Economic Diversification\n` +
+                   `2. Renewable Energy Transition\n` +
+                   `3. Digital Transformation\n` +
+                   `4. Infrastructure Development\n\n` +
+                   `RECOMMENDATIONS\n` +
+                   `- Continued investment in renewable energy\n` +
+                   `- Enhanced regional cooperation\n` +
+                   `- Focus on education and skills development`;
+        }
+        
+        // Generate country-specific report
+        function generateCountryReport(countryCode) {
+            const country = menaCountries[countryCode];
+            if (!country) return 'Country data not available.';
+            
+            return `${country.flag} ${country.name.toUpperCase()} REPORT\n` +
+                   `Generated: ${new Date().toLocaleDateString()}\n\n` +
+                   `COUNTRY OVERVIEW\n` +
+                   `Capital: ${country.capital}\n` +
+                   `Population: ${country.population}\n` +
+                   `GDP: ${country.gdp}\n\n` +
+                   `KEY FOCUS AREAS\n` +
+                   country.insights.map(insight => `- ${insight}`).join('\n') + '\n\n' +
+                   `CURRENT DEVELOPMENTS\n` +
+                   `Recent initiatives and projects are driving significant progress...\n\n` +
+                   `FUTURE OUTLOOK\n` +
+                   `Continued growth expected across multiple sectors...`;
+        }
+        
+        // Open report submission modal
+        function openReportModal() {
+            document.getElementById('reportModal').style.display = 'block';
+        }
+        
+        // Close report submission modal
+        function closeReportModal() {
+            document.getElementById('reportModal').style.display = 'none';
+        }
+        
+        // Submit report
+        function submitReport(e) {
+            e.preventDefault();
+            
+            const formData = {
+                country: document.getElementById('reportCountry').value,
+                title: document.getElementById('reportTitle').value,
+                category: document.getElementById('reportCategory').value,
+                content: document.getElementById('reportContent').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Simulate report submission
+            console.log('Submitting report:', formData);
+            
+            alert('Report submitted successfully! Thank you for contributing to MENA regional intelligence.');
+            
+            // Reset form and close modal
+            document.getElementById('reportForm').reset();
+            closeReportModal();
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('reportModal');
+            if (event.target === modal) {
+                closeReportModal();
+            }
+        }
+    </script>
+    
+    <!-- Near Me JavaScript -->
+    <script src="{{ url_for('static', filename='near-me.js') }}"></script>
+</body>
+</html>

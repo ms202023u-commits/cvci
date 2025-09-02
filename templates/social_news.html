@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social News - News Detector Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='civic-lens-design-system.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='unified-header-footer.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+    </div>
+
+    <!-- Unified Header -->
+    {% include 'includes/unified-header.html' %}
+
+    <main class="main">
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <span>📱 Social News - Credibility Analysis</span>
+                    </div>
+                    <h2 class="hero-title">
+                        <span class="hero-title-main">News from Social Media</span>
+                    </h2>
+                    <p class="hero-description">Follow the latest news from trusted sources on Twitter and Facebook with AI-powered credibility analysis</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <div class="platform-filters">
+                    <button class="filter-btn active" data-platform="all">
+                        <i class="fas fa-globe"></i> All Platforms
+                    </button>
+                    <button class="filter-btn" data-platform="twitter">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </button>
+                    <button class="filter-btn" data-platform="facebook">
+                        <i class="fab fa-facebook"></i> Facebook
+                    </button>
+                </div>
+
+                <div class="social-posts-grid" id="socialPostsGrid">
+                    {% if social_posts %}
+                        {% for post in social_posts %}
+                        <div class="social-post-card" data-platform="{{ post.platform }}">
+                            <div class="post-header">
+                                <div class="source-info">
+                                    <div class="platform-icon">
+                                        {% if post.platform == 'twitter' %}
+                                            <i class="fab fa-twitter"></i>
+                                        {% else %}
+                                            <i class="fab fa-facebook"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="source-details">
+                                        <h3 class="source-name">{{ post.source_name }}</h3>
+                                        <span class="source-handle">{{ post.source }}</span>
+                                        {% if post.verified %}
+                                            <i class="fas fa-check-circle verified-badge"></i>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="post-time">
+                                    <i class="fas fa-clock"></i>
+                                    {{ post.timestamp }}
+                                </div>
+                            </div>
+
+                            <div class="post-content">
+                                {{ post.content }}
+                            </div>
+
+                            <div class="credibility-section">
+                                <div class="credibility-score">
+                                    <span class="score-label">مصداقية:</span>
+                                    <div class="score-bar">
+                                        <div class="score-fill {{ post.credibility_color }}" style="width: {{ post.credibility_score }}%"></div>
+                                    </div>
+                                    <span class="score-text">{{ post.credibility_score }}% ({{ post.credibility_level }})</span>
+                                </div>
+                            </div>
+
+                            <div class="engagement-stats">
+                                <div class="stat-item">
+                                    <i class="fas fa-eye"></i>
+                                    <span>{{ post.views }}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-heart"></i>
+                                    <span>{{ post.likes }}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-comment"></i>
+                                    <span>{{ post.replies }}</span>
+                                </div>
+                                <div class="stat-item">
+                                    {% if post.platform == 'twitter' %}
+                                        <i class="fas fa-retweet"></i>
+                                        <span>{{ post.retweets }}</span>
+                                    {% else %}
+                                        <i class="fas fa-share"></i>
+                                        <span>{{ post.shares }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-posts-message">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>No posts available currently</h3>
+                            <p>Please try again later</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Unified Footer -->
+    {% include 'includes/unified-footer.html' %}
+
+    <style>
+        .social-posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .social-post-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .source-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .platform-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .platform-icon i.fa-twitter {
+            color: #1DA1F2;
+        }
+
+        .platform-icon i.fa-facebook {
+            color: #1877F2;
+        }
+
+        .source-name {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .source-handle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .verified-badge {
+            color: #1DA1F2;
+            margin-right: 0.25rem;
+        }
+
+        .post-time {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .post-content {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .credibility-section {
+            margin-bottom: 1rem;
+        }
+
+        .credibility-score {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .score-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .score-fill.high {
+            background: linear-gradient(90deg, #10B981, #34D399);
+        }
+
+        .score-fill.medium {
+            background: linear-gradient(90deg, #F59E0B, #FBBF24);
+        }
+
+        .score-fill.low {
+            background: linear-gradient(90deg, #EF4444, #F87171);
+        }
+
+        .engagement-stats {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .platform-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .no-posts-message {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            color: white;
+        }
+
+        .no-posts-message i {
+            font-size: 3rem;
+            color: #F59E0B;
+            margin-bottom: 1rem;
+        }
+
+        .no-posts-message h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .no-posts-message p {
+            color: #ccc;
+            font-size: 1rem;
+        }
+    </style>
+
+    <script>
+        // Platform filtering
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const platform = btn.dataset.platform;
+                document.querySelectorAll('.social-post-card').forEach(card => {
+                    if (platform === 'all' || card.dataset.platform === platform) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

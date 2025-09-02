@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultra News Map - Civic Lens Solutions</title>
+    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
+    <link rel="stylesheet" href="{{ url_for('static', filename='civic-lens-design-system.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ultra-map.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='unified-header-footer.css') }}">
+    <link rel="stylesheet" href="static/ultra-index.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+</head>
+<body>
+    <!-- Unified Header -->
+    {% include 'includes/unified-header.html' %}
+
+    <!-- Simple Working Map Interface -->
+    <div class="simple-map-container">
+        <!-- Map Container -->
+        <div id="map" style="width: 100%; height: calc(100vh - 120px); position: relative; z-index: 1;"></div>
+        
+        <!-- Search Bar Overlay -->
+        <div class="map-search-overlay">
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search locations..." class="search-input">
+                <button class="location-btn" onclick="getUserLocation()">
+                    <i class="fas fa-crosshairs"></i>
+                </button>
+            </div>
+        </div>
+            
+            <!-- Map Controls -->
+            <div class="map-controls">
+                <!-- Zoom Controls -->
+                <div class="control-group zoom-group">
+                    <button class="control-btn zoom-in" onclick="zoomIn()">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="control-btn zoom-out" onclick="zoomOut()">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+                
+                <!-- Navigation Controls -->
+                <div class="control-group nav-group">
+                    <button class="control-btn compass" onclick="resetNorth()" title="Reset North">
+                        <i class="fas fa-compass"></i>
+                    </button>
+                    <button class="control-btn fullscreen" onclick="toggleFullscreen()" title="Fullscreen">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
+                
+                <!-- 3D Controls -->
+                <div class="control-group view-group">
+                    <button class="control-btn view-3d" onclick="toggle3D()" title="3D View">
+                        <i class="fas fa-cube"></i>
+                    </button>
+                    <button class="control-btn street-view" onclick="toggleStreetView()" title="Street View">
+                        <i class="fas fa-street-view"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Live Status Bar -->
+            <div class="status-bar">
+                <div class="status-left">
+                    <div class="status-item">
+                        <div class="status-indicator online"></div>
+                        <span>Live Updates</span>
+                    </div>
+                    <div class="status-item">
+                        <i class="fas fa-clock"></i>
+                        <span id="liveTime"></span>
+                    </div>
+                </div>
+                
+                <div class="status-center">
+                    <div class="coordinates" id="coordinates">
+                        <span>Loading location...</span>
+                    </div>
+                </div>
+                
+                <div class="status-right">
+                    <div class="status-item">
+                        <i class="fas fa-wifi"></i>
+                        <span>Connected</span>
+                    </div>
+                    <div class="status-item">
+                        <i class="fas fa-database"></i>
+                        <span id="newsCount">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Filters Panel -->
+        <div class="filters-panel" id="filtersPanel">
+            <div class="panel-header">
+                <h3><i class="fas fa-sliders-h"></i> Advanced Filters</h3>
+                <button class="close-btn" onclick="closeFilters()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="panel-content">
+                <!-- News Type Filters -->
+                <div class="filter-section">
+                    <h4>News Categories</h4>
+                    <div class="filter-grid">
+                        <label class="filter-card">
+                            <input type="checkbox" checked data-filter="breaking">
+                            <div class="card-content breaking">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>Breaking News</span>
+                                <div class="card-count">12</div>
+                            </div>
+                        </label>
+                        
+                        <label class="filter-card">
+                            <input type="checkbox" checked data-filter="verified">
+                            <div class="card-content verified">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Verified</span>
+                                <div class="card-count">8</div>
+                            </div>
+                        </label>
+                        
+                        <label class="filter-card">
+                            <input type="checkbox" checked data-filter="alerts">
+                            <div class="card-content alerts">
+                                <i class="fas fa-bell"></i>
+                                <span>Alerts</span>
+                                <div class="card-count">5</div>
+                            </div>
+                        </label>
+                        
+                        <label class="filter-card">
+                            <input type="checkbox" data-filter="suspicious">
+                            <div class="card-content suspicious">
+                                <i class="fas fa-eye-slash"></i>
+                                <span>Suspicious</span>
+                                <div class="card-count">3</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Time Range -->
+                <div class="filter-section">
+                    <h4>Time Range</h4>
+                    <div class="time-selector">
+                        <button class="time-btn active" data-time="live">Live</button>
+                        <button class="time-btn" data-time="1h">1 Hour</button>
+                        <button class="time-btn" data-time="6h">6 Hours</button>
+                        <button class="time-btn" data-time="24h">24 Hours</button>
+                        <button class="time-btn" data-time="7d">7 Days</button>
+                    </div>
+                </div>
+                
+                <!-- Credibility Range -->
+                <div class="filter-section">
+                    <h4>Credibility Score</h4>
+                    <div class="credibility-range">
+                        <div class="range-slider">
+                            <input type="range" id="credibilityMin" min="0" max="100" value="0" class="slider">
+                            <input type="range" id="credibilityMax" min="0" max="100" value="100" class="slider">
+                        </div>
+                        <div class="range-labels">
+                            <span id="minValue">0%</span>
+                            <span id="maxValue">100%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Distance Filter -->
+                <div class="filter-section">
+                    <h4>Search Radius</h4>
+                    <div class="distance-control">
+                        <input type="range" id="radiusSlider" min="1" max="100" value="25" class="distance-slider">
+                        <div class="distance-display">
+                            <span id="radiusValue">25</span> km
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filter Actions -->
+                <div class="filter-actions">
+                    <button class="action-btn primary" onclick="applyFilters()">
+                        <i class="fas fa-check"></i>
+                        Apply Filters
+                    </button>
+                    <button class="action-btn secondary" onclick="resetFilters()">
+                        <i class="fas fa-undo"></i>
+                        Reset All
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- News Information Panel -->
+        <div class="info-panel" id="infoPanel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <i class="fas fa-newspaper"></i>
+                    <span>Live News Feed</span>
+                </div>
+                <div class="panel-controls">
+                    <button class="panel-btn" onclick="refreshNews()" title="Refresh">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="panel-btn" onclick="toggleAutoRefresh()" title="Auto Refresh">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="panel-btn" onclick="minimizePanel()" title="Minimize">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="panel-content">
+                <!-- Live Stats -->
+                <div class="live-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon breaking">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="breakingCount">12</div>
+                            <div class="stat-label">Breaking</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon verified">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="verifiedCount">8</div>
+                            <div class="stat-label">Verified</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon alerts">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="alertsCount">5</div>
+                            <div class="stat-label">Alerts</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- News Feed -->
+                <div class="news-feed" id="newsFeed">
+                    <!-- Dynamic news items will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- News Detail Modal -->
+        <div class="news-modal" id="newsModal">
+            <div class="modal-backdrop" onclick="closeNewsModal()"></div>
+            <div class="modal-container">
+                <div class="modal-header">
+                    <div class="modal-title" id="modalTitle">News Details</div>
+                    <button class="modal-close" onclick="closeNewsModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="modal-content" id="modalContent">
+                    <!-- Dynamic content will be populated here -->
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="modal-btn share" onclick="shareNews()">
+                        <i class="fas fa-share-alt"></i>
+                        Share
+                    </button>
+                    <button class="modal-btn report" onclick="reportNews()">
+                        <i class="fas fa-flag"></i>
+                        Report
+                    </button>
+                    <button class="modal-btn navigate" onclick="navigateToNews()">
+                        <i class="fas fa-directions"></i>
+                        Navigate
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-content">
+                <div class="loading-spinner">
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
+                </div>
+                <div class="loading-text" id="loadingText">Loading ultra map...</div>
+            </div>
+        </div>
+
+        <!-- Notification System -->
+        <div class="notification-system" id="notificationSystem">
+            <!-- Dynamic notifications will appear here -->
+        </div>
+
+        <!-- Floating Action Button -->
+        <div class="fab-container">
+            <button class="fab main-fab" onclick="toggleFabMenu()">
+                <i class="fas fa-plus"></i>
+            </button>
+            
+            <div class="fab-menu" id="fabMenu">
+                <button class="fab sub-fab" onclick="addNewsReport()" title="Report News">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button class="fab sub-fab" onclick="shareLocation()" title="Share Location">
+                    <i class="fas fa-share"></i>
+                </button>
+                <button class="fab sub-fab" onclick="saveLocation()" title="Save Location">
+                    <i class="fas fa-bookmark"></i>
+                </button>
+                <button class="fab sub-fab" onclick="emergencyAlert()" title="Emergency">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unified Footer -->
+    {% include 'includes/unified-footer.html' %}
+
+    <script src="static/ultra-map.js"></script>
+</body>
+</html>
