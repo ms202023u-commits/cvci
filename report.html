@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report News - Civic Lens Solutions</title>
+    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/style-professional.css">
+    <link rel="stylesheet" href="static/style-enhanced.css">
+    <link rel="stylesheet" href="static/style-boost.css">
+    <link rel="stylesheet" href="static/style-2025.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://i.ibb.co/DP6QRJLS/Untitled-design-29.png" alt="Civic Lens Solutions" class="logo-img">
+                <span class="logo-text">Civic Lens Solutions</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="chatbot.html" class="nav-link">AI Chatbot</a>
+                <a href="latest-news.html" class="nav-link">Latest News</a>
+                <a href="report.html" class="nav-link active">Report News</a>
+                <a href="map.html" class="nav-link">News Map</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Floating Shapes Background -->
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+        <div class="shape shape-5"></div>
+    </div>
+
+    <!-- Report Section -->
+    <section class="report-section">
+        <div class="container">
+            <div class="report-header">
+                <h1 class="gradient-text">Report News</h1>
+                <p>Help build a more informed community by reporting suspicious news, misinformation, or critical events.</p>
+            </div>
+
+            <div class="report-container">
+                <div class="report-form-card">
+                    <div class="card-header">
+                        <i class="fas fa-flag"></i>
+                        <h2>Submit a Report</h2>
+                    </div>
+                    
+                    <form id="reportForm" class="report-form">
+                        <div class="form-group">
+                            <label for="reportTitle">News Title *</label>
+                            <input type="text" id="reportTitle" name="title" required 
+                                   placeholder="Enter the news headline or title">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reportType">Report Type *</label>
+                            <select id="reportType" name="type" required>
+                                <option value="">Select report type</option>
+                                <option value="fake_news">Fake News</option>
+                                <option value="misinformation">Misinformation</option>
+                                <option value="critical_event">Critical Event</option>
+                                <option value="suspicious_content">Suspicious Content</option>
+                                <option value="bias_concern">Bias Concern</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reportContent">News Content *</label>
+                            <textarea id="reportContent" name="content" required rows="6"
+                                      placeholder="Paste the news content or describe the issue..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reportUrl">Source URL</label>
+                            <input type="url" id="reportUrl" name="url" 
+                                   placeholder="https://example.com/news-article">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reportLocation">Location (Optional)</label>
+                            <input type="text" id="reportLocation" name="location" 
+                                   placeholder="City, State or Region">
+                            <button type="button" class="location-btn" onclick="getLocation()">
+                                <i class="fas fa-map-marker-alt"></i> Use My Location
+                            </button>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="anonymousReport" name="anonymous">
+                                <span class="checkmark"></span>
+                                Submit anonymously
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn-primary submit-btn">
+                            <i class="fas fa-paper-plane"></i>
+                            Submit Report
+                        </button>
+                    </form>
+                </div>
+
+                <div class="recent-reports-card">
+                    <div class="card-header">
+                        <i class="fas fa-list"></i>
+                        <h2>Recent Community Reports</h2>
+                    </div>
+                    
+                    <div class="reports-list" id="recentReports">
+                        <div class="report-item">
+                            <div class="report-meta">
+                                <span class="report-type fake-news">Fake News</span>
+                                <span class="report-time">2 hours ago</span>
+                            </div>
+                            <h4>Misleading Health Claims Circulating</h4>
+                            <p>Community member reported false medical information being shared on social media platforms.</p>
+                            <div class="report-stats">
+                                <span class="stat"><i class="fas fa-eye"></i> 45 views</span>
+                                <span class="stat"><i class="fas fa-thumbs-up"></i> 12 verified</span>
+                            </div>
+                        </div>
+
+                        <div class="report-item">
+                            <div class="report-meta">
+                                <span class="report-type critical-event">Critical Event</span>
+                                <span class="report-time">4 hours ago</span>
+                            </div>
+                            <h4>Traffic Disruption Downtown</h4>
+                            <p>Major road closure affecting commuter routes due to infrastructure work.</p>
+                            <div class="report-stats">
+                                <span class="stat"><i class="fas fa-eye"></i> 128 views</span>
+                                <span class="stat"><i class="fas fa-thumbs-up"></i> 34 verified</span>
+                            </div>
+                        </div>
+
+                        <div class="report-item">
+                            <div class="report-meta">
+                                <span class="report-type misinformation">Misinformation</span>
+                                <span class="report-time">6 hours ago</span>
+                            </div>
+                            <h4>False Economic Data Spreading</h4>
+                            <p>Incorrect statistics about local unemployment rates being circulated without verification.</p>
+                            <div class="report-stats">
+                                <span class="stat"><i class="fas fa-eye"></i> 67 views</span>
+                                <span class="stat"><i class="fas fa-thumbs-up"></i> 18 verified</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Notice -->
+    <div class="demo-notice">
+        <div class="container">
+            <div class="notice-content">
+                <i class="fas fa-info-circle"></i>
+                <div class="notice-text">
+                    <h4>Demo Mode</h4>
+                    <p>This is a static demo. Reports will be stored locally for demonstration. For full functionality with database storage, run the platform locally.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/script.js"></script>
+    <script src="static/mobile-2025.js"></script>
+    <script>
+        // Demo report functionality
+        let demoReports = JSON.parse(localStorage.getItem('demoReports') || '[]');
+
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const report = {
+                id: Date.now(),
+                title: formData.get('title'),
+                type: formData.get('type'),
+                content: formData.get('content'),
+                url: formData.get('url'),
+                location: formData.get('location'),
+                anonymous: formData.get('anonymous') === 'on',
+                timestamp: new Date().toISOString(),
+                views: Math.floor(Math.random() * 50) + 1,
+                verified: Math.floor(Math.random() * 20) + 1
+            };
+
+            demoReports.unshift(report);
+            localStorage.setItem('demoReports', JSON.stringify(demoReports));
+            
+            // Show success message
+            if (window.notifications) {
+                window.notifications.show('Report submitted successfully! Thank you for contributing to community awareness.', 'success');
+            }
+            
+            // Reset form
+            this.reset();
+            
+            // Update recent reports
+            updateRecentReports();
+        });
+
+        function updateRecentReports() {
+            const recentReportsContainer = document.getElementById('recentReports');
+            const reportsToShow = demoReports.slice(0, 5);
+            
+            if (reportsToShow.length > 0) {
+                recentReportsContainer.innerHTML = reportsToShow.map(report => `
+                    <div class="report-item">
+                        <div class="report-meta">
+                            <span class="report-type ${report.type.replace('_', '-')}">${report.type.replace('_', ' ').toUpperCase()}</span>
+                            <span class="report-time">${getTimeAgo(report.timestamp)}</span>
+                        </div>
+                        <h4>${report.title}</h4>
+                        <p>${report.content.substring(0, 100)}${report.content.length > 100 ? '...' : ''}</p>
+                        <div class="report-stats">
+                            <span class="stat"><i class="fas fa-eye"></i> ${report.views} views</span>
+                            <span class="stat"><i class="fas fa-thumbs-up"></i> ${report.verified} verified</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function getTimeAgo(timestamp) {
+            const now = new Date();
+            const past = new Date(timestamp);
+            const diffMs = now - past;
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            
+            if (diffHours < 1) return 'Just now';
+            if (diffHours === 1) return '1 hour ago';
+            if (diffHours < 24) return `${diffHours} hours ago`;
+            
+            const diffDays = Math.floor(diffHours / 24);
+            if (diffDays === 1) return '1 day ago';
+            return `${diffDays} days ago`;
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    // In a real app, you'd reverse geocode these coordinates
+                    const lat = position.coords.latitude.toFixed(4);
+                    const lng = position.coords.longitude.toFixed(4);
+                    document.getElementById('reportLocation').value = `Lat: ${lat}, Lng: ${lng}`;
+                    
+                    if (window.notifications) {
+                        window.notifications.show('Location detected successfully!', 'success');
+                    }
+                }, function(error) {
+                    if (window.notifications) {
+                        window.notifications.show('Unable to detect location. Please enter manually.', 'warning');
+                    }
+                });
+            } else {
+                if (window.notifications) {
+                    window.notifications.show('Geolocation not supported by this browser.', 'error');
+                }
+            }
+        }
+
+        // Initialize recent reports on page load
+        updateRecentReports();
+    </script>
+</body>
+</html>

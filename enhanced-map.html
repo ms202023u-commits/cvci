@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional News Map - Civic Lens Solutions</title>
+    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/style-professional.css">
+    <link rel="stylesheet" href="static/enhanced-map.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://i.ibb.co/DP6QRJLS/Untitled-design-29.png" alt="Civic Lens Solutions" class="logo-img">
+                <span class="logo-text">Civic Lens Solutions</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="enhanced-chatbot.html" class="nav-link">AI Chatbots</a>
+                <a href="latest-news.html" class="nav-link">Latest News</a>
+                <a href="report.html" class="nav-link">Report News</a>
+                <a href="enhanced-map.html" class="nav-link active">News Map</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Map Interface -->
+    <div class="map-interface">
+        <!-- Search Bar -->
+        <div class="map-search-container">
+            <div class="search-bar">
+                <div class="search-input-group">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="locationSearch" placeholder="Search for location, address, or news..." class="search-input">
+                    <button class="voice-search-btn" onclick="startVoiceSearch()">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="quick-action-btn" onclick="locateUser()" title="My Location">
+                    <i class="fas fa-crosshairs"></i>
+                </button>
+                <button class="quick-action-btn" onclick="toggleTraffic()" title="Traffic Layer">
+                    <i class="fas fa-road"></i>
+                </button>
+                <button class="quick-action-btn" onclick="toggleSatellite()" title="Satellite View">
+                    <i class="fas fa-satellite"></i>
+                </button>
+                <button class="quick-action-btn" onclick="toggleFilters()" title="Filters">
+                    <i class="fas fa-filter"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Map Container -->
+        <div class="map-container">
+            <div id="map" class="interactive-map"></div>
+            
+            <!-- Map Controls -->
+            <div class="map-controls">
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoomIn()">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="zoom-btn" onclick="zoomOut()">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+                
+                <div class="compass-control">
+                    <button class="compass-btn" onclick="resetNorth()" title="Reset North">
+                        <i class="fas fa-compass"></i>
+                    </button>
+                </div>
+                
+                <div class="location-control">
+                    <button class="location-btn" onclick="locateUser()" title="My Location">
+                        <i class="fas fa-location-arrow"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Speed and Status Bar -->
+            <div class="status-bar">
+                <div class="status-item">
+                    <i class="fas fa-wifi"></i>
+                    <span>Online</span>
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-clock"></i>
+                    <span id="currentTime"></span>
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span id="currentLocation">Locating...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters Panel -->
+        <div class="filters-panel" id="filtersPanel">
+            <div class="filters-header">
+                <h3><i class="fas fa-filter"></i> Map Filters</h3>
+                <button class="close-filters" onclick="toggleFilters()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="filters-content">
+                <div class="filter-group">
+                    <h4>News Types</h4>
+                    <div class="filter-options">
+                        <label class="filter-option">
+                            <input type="checkbox" checked data-filter="critical">
+                            <span class="checkmark critical"></span>
+                            Critical Events
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" checked data-filter="verified">
+                            <span class="checkmark verified"></span>
+                            Verified News
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" checked data-filter="warning">
+                            <span class="checkmark warning"></span>
+                            Warnings & Alerts
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" data-filter="fake">
+                            <span class="checkmark fake"></span>
+                            Fake News Reports
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h4>Time Range</h4>
+                    <div class="time-filters">
+                        <button class="time-filter active" data-time="1h">Last Hour</button>
+                        <button class="time-filter" data-time="24h">24 Hours</button>
+                        <button class="time-filter" data-time="7d">7 Days</button>
+                        <button class="time-filter" data-time="all">All Time</button>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h4>Credibility Score</h4>
+                    <div class="credibility-slider">
+                        <input type="range" id="credibilityRange" min="0" max="100" value="50">
+                        <div class="slider-labels">
+                            <span>0%</span>
+                            <span id="credibilityValue">50%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-actions">
+                    <button class="apply-filters-btn" onclick="applyFilters()">
+                        <i class="fas fa-check"></i> Apply Filters
+                    </button>
+                    <button class="reset-filters-btn" onclick="resetFilters()">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- News Panel -->
+        <div class="news-panel" id="newsPanel">
+            <div class="news-panel-header">
+                <h3><i class="fas fa-newspaper"></i> Nearby News</h3>
+                <div class="panel-controls">
+                    <button class="panel-control-btn" onclick="refreshNews()" title="Refresh">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="panel-control-btn" onclick="toggleNewsPanel()" title="Minimize">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="news-panel-content">
+                <div class="news-stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalNews">12</div>
+                        <div class="stat-label">Total Reports</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="verifiedNews">8</div>
+                        <div class="stat-label">Verified</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="criticalNews">3</div>
+                        <div class="stat-label">Critical</div>
+                    </div>
+                </div>
+                
+                <div class="news-list" id="newsList">
+                    <!-- News items will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- News Detail Modal -->
+        <div class="news-modal" id="newsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">News Details</h3>
+                    <button class="modal-close" onclick="closeNewsModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- News details will be populated here -->
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn secondary" onclick="shareNews()">
+                        <i class="fas fa-share"></i> Share
+                    </button>
+                    <button class="modal-btn primary" onclick="reportNews()">
+                        <i class="fas fa-flag"></i> Report Issue
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p>Loading news data...</p>
+            </div>
+        </div>
+
+        <!-- Notification Container -->
+        <div class="notification-container" id="notificationContainer"></div>
+    </div>
+
+    <script src="static/script.js"></script>
+    <script src="static/mobile-2025.js"></script>
+    <script src="static/enhanced-map.js"></script>
+</body>
+</html>

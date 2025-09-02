@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.py"
+    }
+  ],
+  "env": {
+    "DEEPSEEK_API_KEY": "sk-0c6cc3046e3a4d0a8c16442cc4796e08",
+    "FLASK_SECRET_KEY": "7a357c2e0575546703d88923089a95acedbe"
+  },
+  "functions": {
+    "api/index.py": {
+      "runtime": "@vercel/python",
+      "maxDuration": 30
+    }
+  }
+}

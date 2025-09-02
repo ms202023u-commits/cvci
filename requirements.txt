@@ -1,0 +1,7 @@
+Flask==2.3.3
+geopy==2.4.0
+openai==1.97.1
+textblob==0.17.1
+python-dotenv==1.0.0
+requests==2.31.0
+beautifulsoup4==4.12.2

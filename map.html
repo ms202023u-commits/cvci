@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Map - Civic Lens Solutions</title>
+    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/style-professional.css">
+    <link rel="stylesheet" href="static/style-enhanced.css">
+    <link rel="stylesheet" href="static/style-boost.css">
+    <link rel="stylesheet" href="static/style-2025.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://i.ibb.co/DP6QRJLS/Untitled-design-29.png" alt="Civic Lens Solutions" class="logo-img">
+                <span class="logo-text">Civic Lens Solutions</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="chatbot.html" class="nav-link">AI Chatbot</a>
+                <a href="latest-news.html" class="nav-link">Latest News</a>
+                <a href="report.html" class="nav-link">Report News</a>
+                <a href="map.html" class="nav-link active">News Map</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Floating Shapes Background -->
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+        <div class="shape shape-5"></div>
+    </div>
+
+    <!-- Map Section -->
+    <section class="map-section">
+        <div class="container">
+            <div class="map-header">
+                <h1 class="gradient-text">Location-Based News Map</h1>
+                <p>Discover critical events and news happening near your location with real-time updates.</p>
+            </div>
+
+            <div class="map-controls">
+                <div class="location-controls">
+                    <button class="control-btn" onclick="detectLocation()">
+                        <i class="fas fa-crosshairs"></i>
+                        Detect My Location
+                    </button>
+                    <div class="radius-control">
+                        <label for="radiusSlider">Search Radius: <span id="radiusValue">10</span> km</label>
+                        <input type="range" id="radiusSlider" min="1" max="50" value="10" 
+                               oninput="updateRadius(this.value)">
+                    </div>
+                </div>
+                
+                <div class="filter-controls">
+                    <select id="newsTypeFilter" onchange="filterNews()">
+                        <option value="all">All News Types</option>
+                        <option value="critical_event">Critical Events</option>
+                        <option value="fake_news">Fake News</option>
+                        <option value="misinformation">Misinformation</option>
+                        <option value="verified_news">Verified News</option>
+                    </select>
+                    
+                    <button class="control-btn" onclick="refreshMap()">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="map-container">
+                <div class="interactive-map" id="newsMap">
+                    <div class="map-placeholder">
+                        <div class="map-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h3>Interactive News Map</h3>
+                        <p>Click "Detect My Location" to view nearby news and events</p>
+                        <div class="demo-locations">
+                            <div class="location-marker" style="top: 30%; left: 25%;" onclick="showLocationInfo('downtown')">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span class="marker-label">Downtown Alert</span>
+                            </div>
+                            <div class="location-marker" style="top: 60%; left: 70%;" onclick="showLocationInfo('highway')">
+                                <i class="fas fa-car-crash"></i>
+                                <span class="marker-label">Traffic Issue</span>
+                            </div>
+                            <div class="location-marker" style="top: 45%; left: 50%;" onclick="showLocationInfo('weather')">
+                                <i class="fas fa-cloud-rain"></i>
+                                <span class="marker-label">Weather Alert</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="map-sidebar">
+                    <div class="news-feed">
+                        <h3><i class="fas fa-newspaper"></i> Nearby News Feed</h3>
+                        <div class="news-items" id="newsFeed">
+                            <div class="news-item critical">
+                                <div class="news-header">
+                                    <span class="news-type">Critical Event</span>
+                                    <span class="news-distance">2.3 km</span>
+                                </div>
+                                <h4>Traffic Disruption on Main Highway</h4>
+                                <p>Major delays reported due to road construction. Alternative routes recommended.</p>
+                                <div class="news-meta">
+                                    <span class="credibility-score high">85% Credible</span>
+                                    <span class="news-time">2 hours ago</span>
+                                </div>
+                            </div>
+
+                            <div class="news-item warning">
+                                <div class="news-header">
+                                    <span class="news-type">Weather Alert</span>
+                                    <span class="news-distance">5.1 km</span>
+                                </div>
+                                <h4>Severe Weather Warning Issued</h4>
+                                <p>Heavy rainfall and strong winds expected in the metropolitan area.</p>
+                                <div class="news-meta">
+                                    <span class="credibility-score high">92% Credible</span>
+                                    <span class="news-time">4 hours ago</span>
+                                </div>
+                            </div>
+
+                            <div class="news-item info">
+                                <div class="news-header">
+                                    <span class="news-type">Community Notice</span>
+                                    <span class="news-distance">7.8 km</span>
+                                </div>
+                                <h4>Increased Security Measures</h4>
+                                <p>Enhanced security protocols in downtown area following recent incidents.</p>
+                                <div class="news-meta">
+                                    <span class="credibility-score medium">78% Credible</span>
+                                    <span class="news-time">6 hours ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="location-stats">
+                        <h3><i class="fas fa-chart-bar"></i> Area Statistics</h3>
+                        <div class="stat-grid">
+                            <div class="stat-item">
+                                <div class="stat-value">24</div>
+                                <div class="stat-label">Active Reports</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">89%</div>
+                                <div class="stat-label">Avg Credibility</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">156</div>
+                                <div class="stat-label">Community Verifications</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">3</div>
+                                <div class="stat-label">Critical Alerts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Notice -->
+    <div class="demo-notice">
+        <div class="container">
+            <div class="notice-content">
+                <i class="fas fa-info-circle"></i>
+                <div class="notice-text">
+                    <h4>Demo Mode</h4>
+                    <p>This is a static demo with sample data. For real-time location-based news with live map integration, run the platform locally.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/script.js"></script>
+    <script src="static/mobile-2025.js"></script>
+    <script>
+        let userLocation = null;
+        let currentRadius = 10;
+
+        function detectLocation() {
+            if (navigator.geolocation) {
+                if (window.notifications) {
+                    window.notifications.show('Detecting your location...', 'info');
+                }
+                
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    
+                    if (window.notifications) {
+                        window.notifications.show('Location detected! Loading nearby news...', 'success');
+                    }
+                    
+                    updateMapView();
+                    loadNearbyNews();
+                }, function(error) {
+                    if (window.notifications) {
+                        window.notifications.show('Unable to detect location. Using demo data.', 'warning');
+                    }
+                    loadDemoData();
+                });
+            } else {
+                if (window.notifications) {
+                    window.notifications.show('Geolocation not supported. Showing demo data.', 'info');
+                }
+                loadDemoData();
+            }
+        }
+
+        function updateRadius(value) {
+            currentRadius = value;
+            document.getElementById('radiusValue').textContent = value;
+            
+            if (userLocation) {
+                loadNearbyNews();
+            }
+        }
+
+        function updateMapView() {
+            const mapPlaceholder = document.querySelector('.map-placeholder h3');
+            if (mapPlaceholder && userLocation) {
+                mapPlaceholder.textContent = `Your Location: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`;
+            }
+        }
+
+        function loadNearbyNews() {
+            // Simulate loading nearby news
+            setTimeout(() => {
+                const newsFeed = document.getElementById('newsFeed');
+                newsFeed.innerHTML = generateNearbyNewsHTML();
+                updateLocationStats();
+            }, 1000);
+        }
+
+        function loadDemoData() {
+            const newsFeed = document.getElementById('newsFeed');
+            newsFeed.innerHTML = generateDemoNewsHTML();
+            updateLocationStats();
+        }
+
+        function generateNearbyNewsHTML() {
+            const newsItems = [
+                {
+                    type: 'Critical Event',
+                    title: 'Local Emergency Response Active',
+                    content: 'Emergency services responding to incident in your area. Avoid main routes.',
+                    distance: (Math.random() * 5 + 1).toFixed(1),
+                    credibility: Math.floor(Math.random() * 20 + 80),
+                    time: Math.floor(Math.random() * 6 + 1)
+                },
+                {
+                    type: 'Traffic Update',
+                    title: 'Road Closure Affecting Commute',
+                    content: 'Temporary road closure due to utility work. Expected duration 2-3 hours.',
+                    distance: (Math.random() * 8 + 2).toFixed(1),
+                    credibility: Math.floor(Math.random() * 15 + 85),
+                    time: Math.floor(Math.random() * 4 + 2)
+                },
+                {
+                    type: 'Community Alert',
+                    title: 'Public Safety Notice',
+                    content: 'Increased police presence in downtown area for community safety.',
+                    distance: (Math.random() * 10 + 3).toFixed(1),
+                    credibility: Math.floor(Math.random() * 25 + 75),
+                    time: Math.floor(Math.random() * 8 + 3)
+                }
+            ];
+
+            return newsItems.map(item => `
+                <div class="news-item ${item.type.toLowerCase().includes('critical') ? 'critical' : 'info'}">
+                    <div class="news-header">
+                        <span class="news-type">${item.type}</span>
+                        <span class="news-distance">${item.distance} km</span>
+                    </div>
+                    <h4>${item.title}</h4>
+                    <p>${item.content}</p>
+                    <div class="news-meta">
+                        <span class="credibility-score ${item.credibility > 85 ? 'high' : 'medium'}">${item.credibility}% Credible</span>
+                        <span class="news-time">${item.time} hours ago</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function generateDemoNewsHTML() {
+            return `
+                <div class="news-item critical">
+                    <div class="news-header">
+                        <span class="news-type">Critical Event</span>
+                        <span class="news-distance">2.3 km</span>
+                    </div>
+                    <h4>Traffic Disruption on Main Highway</h4>
+                    <p>Major delays reported due to road construction. Alternative routes recommended.</p>
+                    <div class="news-meta">
+                        <span class="credibility-score high">85% Credible</span>
+                        <span class="news-time">2 hours ago</span>
+                    </div>
+                </div>
+                <div class="news-item warning">
+                    <div class="news-header">
+                        <span class="news-type">Weather Alert</span>
+                        <span class="news-distance">5.1 km</span>
+                    </div>
+                    <h4>Severe Weather Warning Issued</h4>
+                    <p>Heavy rainfall and strong winds expected in the metropolitan area.</p>
+                    <div class="news-meta">
+                        <span class="credibility-score high">92% Credible</span>
+                        <span class="news-time">4 hours ago</span>
+                    </div>
+                </div>
+                <div class="news-item info">
+                    <div class="news-header">
+                        <span class="news-type">Community Notice</span>
+                        <span class="news-distance">7.8 km</span>
+                    </div>
+                    <h4>Increased Security Measures</h4>
+                    <p>Enhanced security protocols in downtown area following recent incidents.</p>
+                    <div class="news-meta">
+                        <span class="credibility-score medium">78% Credible</span>
+                        <span class="news-time">6 hours ago</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateLocationStats() {
+            const stats = document.querySelectorAll('.stat-value');
+            stats[0].textContent = Math.floor(Math.random() * 30 + 15);
+            stats[1].textContent = Math.floor(Math.random() * 15 + 85) + '%';
+            stats[2].textContent = Math.floor(Math.random() * 100 + 100);
+            stats[3].textContent = Math.floor(Math.random() * 5 + 1);
+        }
+
+        function showLocationInfo(location) {
+            const locationData = {
+                downtown: {
+                    title: 'Downtown Security Alert',
+                    content: 'Increased security measures in effect. Normal business operations continue.',
+                    type: 'Community Notice'
+                },
+                highway: {
+                    title: 'Highway Traffic Incident',
+                    content: 'Multi-vehicle accident causing delays. Emergency services on scene.',
+                    type: 'Critical Event'
+                },
+                weather: {
+                    title: 'Weather Advisory',
+                    content: 'Severe weather conditions expected. Take necessary precautions.',
+                    type: 'Weather Alert'
+                }
+            };
+
+            const info = locationData[location];
+            if (info && window.notifications) {
+                window.notifications.show(`${info.type}: ${info.title} - ${info.content}`, 'info', { duration: 6000 });
+            }
+        }
+
+        function filterNews() {
+            const filter = document.getElementById('newsTypeFilter').value;
+            const newsItems = document.querySelectorAll('.news-item');
+            
+            newsItems.forEach(item => {
+                const newsType = item.querySelector('.news-type').textContent.toLowerCase().replace(' ', '_');
+                if (filter === 'all' || newsType.includes(filter.replace('_', ' '))) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function refreshMap() {
+            if (window.notifications) {
+                window.notifications.show('Refreshing map data...', 'info');
+            }
+            
+            setTimeout(() => {
+                if (userLocation) {
+                    loadNearbyNews();
+                } else {
+                    loadDemoData();
+                }
+                
+                if (window.notifications) {
+                    window.notifications.show('Map data refreshed!', 'success');
+                }
+            }, 1500);
+        }
+
+        // Initialize with demo data
+        loadDemoData();
+    </script>
+</body>
+</html>

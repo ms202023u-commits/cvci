@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot - Civic Lens Solutions</title>
+    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/style-professional.css">
+    <link rel="stylesheet" href="static/style-enhanced.css">
+    <link rel="stylesheet" href="static/style-boost.css">
+    <link rel="stylesheet" href="static/style-2025.css">
+    <link rel="stylesheet" href="static/style-3d-chatbot.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://i.ibb.co/DP6QRJLS/Untitled-design-29.png" alt="Civic Lens Solutions" class="logo-img">
+                <span class="logo-text">Civic Lens Solutions</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="chatbot.html" class="nav-link active">AI Chatbot</a>
+                <a href="latest-news.html" class="nav-link">Latest News</a>
+                <a href="report.html" class="nav-link">Report News</a>
+                <a href="map.html" class="nav-link">News Map</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Floating Shapes Background -->
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+        <div class="shape shape-5"></div>
+    </div>
+
+    <!-- AI Chatbot Section -->
+    <section class="chatbot-section">
+        <div class="container">
+            <div class="chatbot-header">
+                <div class="analyst-avatar">
+                    <div class="avatar-glow"></div>
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="analyst-info">
+                    <h1>AI News Analyst</h1>
+                    <p>Advanced news verification powered by DeepSeek AI</p>
+                    <div class="analyst-status">
+                        <span class="status-indicator online"></span>
+                        <span>Online & Ready</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chatbot-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-text">
+                                <h4>Welcome to Civic Lens Solutions AI Analyst! 🤖</h4>
+                                <p>I'm here to help you verify news credibility, detect bias, and analyze sources. You can:</p>
+                                <ul>
+                                    <li><strong>Paste news articles</strong> for full credibility analysis</li>
+                                    <li><strong>Ask about sources</strong> for verification checks</li>
+                                    <li><strong>Request bias detection</strong> for any content</li>
+                                    <li><strong>Get quick fact checks</strong> on claims</li>
+                                </ul>
+                                <p><em>Note: This is a demo version. For full AI functionality, please run the platform locally with your DeepSeek API key.</em></p>
+                            </div>
+                            <div class="message-actions">
+                                <button class="action-btn" onclick="insertSampleQuery('Analyze this news article')">
+                                    <i class="fas fa-newspaper"></i> Analyze Article
+                                </button>
+                                <button class="action-btn" onclick="insertSampleQuery('Check source credibility')">
+                                    <i class="fas fa-shield-check"></i> Check Source
+                                </button>
+                                <button class="action-btn" onclick="insertSampleQuery('Detect bias in this content')">
+                                    <i class="fas fa-balance-scale"></i> Detect Bias
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <div class="quick-actions">
+                        <button class="quick-action" onclick="insertSampleQuery('Full Analysis')">
+                            <i class="fas fa-search"></i> Full Analysis
+                        </button>
+                        <button class="quick-action" onclick="insertSampleQuery('Quick Check')">
+                            <i class="fas fa-bolt"></i> Quick Check
+                        </button>
+                        <button class="quick-action" onclick="insertSampleQuery('Source Verification')">
+                            <i class="fas fa-shield-alt"></i> Source Check
+                        </button>
+                        <button class="quick-action" onclick="insertSampleQuery('Bias Detection')">
+                            <i class="fas fa-balance-scale"></i> Bias Scan
+                        </button>
+                    </div>
+                    
+                    <div class="chat-input-wrapper">
+                        <textarea 
+                            id="chatInput" 
+                            placeholder="Paste news content or ask about credibility..."
+                            rows="3"
+                        ></textarea>
+                        <button id="sendButton" class="send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="input-footer">
+                        <div class="session-controls">
+                            <button class="control-btn" onclick="clearChat()">
+                                <i class="fas fa-trash"></i> Clear
+                            </button>
+                            <button class="control-btn" onclick="exportChat()">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                        </div>
+                        <div class="ai-indicator">
+                            <span class="ai-badge">Powered by DeepSeek AI</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Notice -->
+    <div class="demo-notice">
+        <div class="container">
+            <div class="notice-content">
+                <i class="fas fa-info-circle"></i>
+                <div class="notice-text">
+                    <h4>Demo Mode</h4>
+                    <p>This is a static demo. For full AI functionality with DeepSeek integration, run the platform locally or deploy with backend support.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/script.js"></script>
+    <script src="static/mobile-2025.js"></script>
+    <script>
+        // Static demo functionality
+        function insertSampleQuery(query) {
+            document.getElementById('chatInput').value = query;
+        }
+
+        function clearChat() {
+            const chatMessages = document.getElementById('chatMessages');
+            const botWelcome = chatMessages.querySelector('.bot-message');
+            chatMessages.innerHTML = '';
+            chatMessages.appendChild(botWelcome);
+        }
+
+        function exportChat() {
+            window.notifications?.show('Export feature available in full version', 'info');
+        }
+
+        // Demo chat functionality
+        document.getElementById('sendButton').addEventListener('click', function() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addUserMessage(message);
+                input.value = '';
+                
+                setTimeout(() => {
+                    addBotResponse(message);
+                }, 1000);
+            }
+        });
+
+        function addUserMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user-message';
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <div class="message-text">${message}</div>
+                </div>
+                <div class="message-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addBotResponse(userMessage) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot-message';
+            
+            let response = getDemoResponse(userMessage);
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <div class="message-text">${response}</div>
+                    <div class="credibility-score">
+                        <div class="score-label">Demo Credibility Score</div>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: 85%"></div>
+                        </div>
+                        <div class="score-value">85%</div>
+                    </div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function getDemoResponse(message) {
+            const responses = {
+                'full analysis': 'This is a demo response for full news analysis. In the live version, I would provide comprehensive credibility assessment, source verification, bias detection, and fact-checking using DeepSeek AI.',
+                'quick check': 'Demo quick check complete! The live version would provide instant credibility scoring and key reliability indicators.',
+                'source verification': 'Demo source check: In the full version, I would verify the publisher, check domain reputation, and analyze source credibility patterns.',
+                'bias detection': 'Demo bias analysis: The live version would detect political bias, emotional language, and provide balanced perspective recommendations.'
+            };
+            
+            const lowerMessage = message.toLowerCase();
+            for (const [key, response] of Object.entries(responses)) {
+                if (lowerMessage.includes(key)) {
+                    return response;
+                }
+            }
+            
+            return `Thank you for your query: "${message}". This is a demo version of Civic Lens Solutions. In the full version powered by DeepSeek AI, I would provide detailed analysis including credibility scoring, bias detection, source verification, and fact-checking. To experience the complete functionality, please run the platform locally with the DeepSeek API integration.`;
+        }
+
+        // Enter key support
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.getElementById('sendButton').click();
+            }
+        });
+    </script>
+</body>
+</html>
